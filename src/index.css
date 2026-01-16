@@ -64,17 +64,3 @@ body {
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
-/* ===== STAR FIELD ===== */
-/* .stars {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    radial-gradient(1px 1px at 10% 20%, #ffffff80 50%, transparent 51%),
-    radial-gradient(1px 1px at 30% 80%, #ffffff80 50%, transparent 51%),
-    radial-gradient(1px 1px at 70% 40%, #ffffff80 50%, transparent 51%),
-    radial-gradient(1px 1px at 90% 70%, #ffffff80 50%, transparent 51%);
-  background-size: 400px 400px;
-  opacity: 0.4;
-  z-index: -1;
-} */

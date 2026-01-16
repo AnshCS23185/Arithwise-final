@@ -17,13 +17,17 @@ export default function Hero() {
     <section className="relative w-full min-h-screen bg-black overflow-hidden">
 
       {/* ================= SPLINE BACKGROUND ================= */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
+      <div className="absolute inset-0 z-0 pointer-events-none will-change-transform">
 
         {/* LEFT SPLINE */}
         <div className="absolute left-0 top-1/2 -translate-y-1/2">
           <iframe
             src="https://my.spline.design/cubic-bB4qr5HkAWzZMHjtYV2sAwKD/"
-            className="w-[70vw] h-[100vh]"
+            className="
+              w-[72vw] h-[105vh]
+              -mt-[2.5vh]
+              brightness-[0.55] contrast-[1.1] saturate-[0.9]
+            "
             frameBorder="0"
             allow="autoplay; fullscreen"
           />
@@ -33,99 +37,55 @@ export default function Hero() {
         <div className="absolute right-0 top-1/2 -translate-y-1/2">
           <iframe
             src="https://my.spline.design/cubic-bB4qr5HkAWzZMHjtYV2sAwKD/"
-            className="w-[70vw] h-[100vh] scale-x-[-1] opacity-70"
+            className="
+              w-[72vw] h-[105vh]
+              -mt-[2.5vh]
+              scale-x-[-1] opacity-70
+              brightness-[0.55] contrast-[1.1] saturate-[0.9]
+            "
             frameBorder="0"
             allow="autoplay; fullscreen"
           />
         </div>
       </div>
 
-      {/* SUBTLE DARK OVERLAY */}
-      <div className="absolute inset-0 z-10 bg-black/25" />
+      {/* ================= SINGLE UNIFORM OVERLAY ================= */}
+      <div className="absolute inset-0 z-10 bg-black/55" />
 
-      {/* ================= TEXT ================= */}
+      {/* ================= TEXT CONTENT ================= */}
       <div className="relative z-20 flex items-start justify-center pt-[16vh] px-6">
-        <div className="max-w-6xl w-full text-center relative">
-
-          {/* SOFT GLOW BACKDROP */}
-          <div
-            className="
-              absolute inset-0 -z-10
-              bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.75)_0%,rgba(0,0,0,0.55)_40%,rgba(0,0,0,0)_75%)]
-              blur-2xl
-            "
-          />
+        <div className="max-w-6xl w-full text-center">
 
           {/* MAIN TITLE */}
           <h1
             className="
-              flex flex-wrap justify-center items-baseline gap-5
-              font-semibold tracking-tight
-              text-white
+              text-white font-semibold tracking-tight
               text-[5rem] md:text-[6.8rem] lg:text-[7.8rem]
-              drop-shadow-[0_10px_50px_rgba(0,0,0,1)]
             "
           >
-            <span>Solution Engine.</span>
-
-            <span
-              className="
-                text-fuchsia-400
-                drop-shadow-[0_0_70px_rgba(236,72,153,1)]
-              "
-            >
-              Ignited
-            </span>
+            Solution Engine.{" "}
+            <span className="text-fuchsia-400">Ignited</span>
           </h1>
 
-          {/* ================= SUB HEADING ================= */}
+          {/* SUB HEADING */}
           <div
             className="
-              mt-10 flex justify-center items-center gap-4
+              mt-10 flex justify-center gap-4
               text-[2.8rem] md:text-[3.6rem]
               font-medium
             "
           >
-            {/* STATIC WORD */}
-            <span
-              className="
-                text-white
-                drop-shadow-[0_6px_35px_rgba(0,0,0,0.95)]
-              "
-            >
-              Engineering
-            </span>
+            <span className="text-white">Engineering</span>
 
-            {/* SMOOTH ANIMATED WORD */}
             <div className="relative h-[1.3em] w-[12ch] overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.span
                   key={words[index]}
                   initial={{ opacity: 0, y: 12 }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                    textShadow: [
-                      "0 0 12px rgba(236,72,153,0.4)",
-                      "0 0 45px rgba(236,72,153,0.95)",
-                      "0 0 12px rgba(236,72,153,0.4)",
-                    ],
-                  }}
+                  animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
-                  transition={{
-                    opacity: { duration: 0.6, ease: "easeOut" },
-                    y: { duration: 0.6, ease: "easeOut" },
-                    textShadow: {
-                      duration: 2.8,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    },
-                  }}
-                  className="
-                    absolute left-0 right-0 text-center
-                    text-fuchsia-400
-                    will-change-transform
-                  "
+                  transition={{ duration: 0.6 }}
+                  className="absolute left-0 right-0 text-center text-fuchsia-400"
                 >
                   {words[index]}
                 </motion.span>
@@ -140,7 +100,6 @@ export default function Hero() {
               text-white/85
               max-w-3xl mx-auto
               leading-relaxed
-              drop-shadow-[0_6px_30px_rgba(0,0,0,0.9)]
             "
           >
             We architect scalable, high-performance systems that evolve with your
