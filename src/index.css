@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background:
+    radial-gradient(
+      1200px 600px at 70% 40%,
+      rgba(76, 29, 149, 0.35),
+      rgba(26, 15, 46, 0.6),
+      #050308 70%
+    ),
+    linear-gradient(
+      120deg,
+      #050308 0%,
+      #1a0f2e 40%,
+      #050308 100%
+    );
+  color: white;
+  overflow-x: hidden;
+}
+
+
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 3s ease infinite;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #111827;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #9333ea, #f97316);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #7c3aed, #ea580c);
+}
+@keyframes gradient-x {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 3s ease infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+/* ===== STAR FIELD ===== */
+/* .stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, #ffffff80 50%, transparent 51%),
+    radial-gradient(1px 1px at 30% 80%, #ffffff80 50%, transparent 51%),
+    radial-gradient(1px 1px at 70% 40%, #ffffff80 50%, transparent 51%),
+    radial-gradient(1px 1px at 90% 70%, #ffffff80 50%, transparent 51%);
+  background-size: 400px 400px;
+  opacity: 0.4;
+  z-index: -1;
+} */
