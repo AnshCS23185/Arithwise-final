@@ -1,28 +1,3 @@
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-// // Common Components
-// import Header from "./components/header-Dhara.jsx";
-// import Footer from "./components/footer-Dhara.jsx";
-
-// // Pages
-// import Home from "./home-Ansh.jsx";
-// import DarkAboutUs from "./about-Devang.jsx";
-
-// function App() {
-//   return (
-//     <Router>
-//       <Header />
-
-//       <Routes>
-//         <Route path="/" element={<Home />} />
-//         <Route path="/about" element={<DarkAboutUs />} />
-//       </Routes>
-
-//       <Footer />
-//     </Router>
-//   );
-// }
-
 // export default App;
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 

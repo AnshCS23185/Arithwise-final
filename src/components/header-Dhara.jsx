@@ -4,25 +4,35 @@ import { Link } from "react-router-dom";
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [darkMode, setDarkMode] = useState(
+    localStorage.theme === "dark"
+  );
 
   const navItems = [
-  { label: "Our Story", path: "/about" },
-  { label: "Solutions", path: "/services" },
-  { label: "Opportunities", path: "/career" },
-  { label: "Login", path: "/login" },
-  { label: "Audiowise", path: "/audiowise" },
+    { label: "Our Story", path: "/about" },
+    { label: "Solutions", path: "/services" },
+    { label: "Opportunities", path: "/career" },
+    { label: "Login", path: "/login" },
+    { label: "Audiowise", path: "/audiowise" },
   ];
 
-
-  // Detect scroll
+  /* Scroll detection */
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 40);
-    };
-
+    const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  /* Dark mode handler */
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.theme = "dark";
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.theme = "light";
+    }
+  }, [darkMode]);
 
   return (
     <header
@@ -30,7 +40,7 @@ export default function Header() {
         fixed top-0 w-full z-50 transition-all duration-300
         ${
           scrolled
-            ? "bg-black/80 backdrop-blur-md border-b border-white/20"
+            ? "bg-black/80 dark:bg-black/80 backdrop-blur-md border-b border-white/20"
             : "bg-transparent"
         }
       `}
@@ -55,7 +65,7 @@ export default function Header() {
               to={item.path}
               className="
                 relative text-[16px] font-semibold tracking-wide
-                text-white transition-all duration-300
+                text-white dark:text-white
                 after:absolute after:left-0 after:-bottom-1
                 after:h-[2px] after:w-0 after:bg-white
                 after:transition-all after:duration-300
@@ -67,9 +77,25 @@ export default function Header() {
           ))}
         </nav>
 
-
         {/* Right Section */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-5">
+
+          {/* 🌙 Theme Toggle */}
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="
+              hidden lg:flex items-center justify-center
+              w-10 h-10 rounded-full
+              border border-white/40
+              text-white
+              hover:bg-white hover:text-black
+              transition-all duration-300
+            "
+            aria-label="Toggle Theme"
+          >
+            {darkMode ? "☀️" : "🌙"}
+          </button>
+
           {/* CTA */}
           <Link
             to="/contact"
@@ -101,6 +127,7 @@ export default function Header() {
       {open && (
         <div className="lg:hidden bg-black/95 backdrop-blur-md border-t border-white/20">
           <nav className="flex flex-col px-6 py-6 gap-6">
+
             {navItems.map((item) => (
               <Link
                 key={item.path}
@@ -115,6 +142,18 @@ export default function Header() {
               </Link>
             ))}
 
+            {/* Mobile Theme Toggle */}
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className="
+                mt-4 py-3 rounded-full
+                border border-white
+                text-white font-semibold
+                transition-all duration-300
+              "
+            >
+              {darkMode ? "Switch to Light ☀️" : "Switch to Dark 🌙"}
+            </button>
 
             <Link
               to="/contact"
@@ -130,6 +169,7 @@ export default function Header() {
             >
               Get in Touch
             </Link>
+
           </nav>
         </div>
       )}
