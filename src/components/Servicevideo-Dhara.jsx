@@ -4,26 +4,35 @@ export default function ServiceVideo({ src, active }) {
   const videoRef = useRef(null);
 
   useEffect(() => {
-    if (!videoRef.current) return;
+    const video = videoRef.current;
+    if (!video) return;
 
     if (active) {
-      videoRef.current.currentTime = 13; // 👈 START AT 13s
-      videoRef.current.play();
+      video.play().catch(() => {});
     } else {
-      videoRef.current.pause();
+      video.pause();
     }
   }, [active]);
 
   return (
-    <video
-      ref={videoRef}
-      src={src}
-      muted
-      loop
-      playsInline
-      className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-        active ? "opacity-100" : "opacity-0"
-      }`}
-    />
+    <div
+      className={`
+        absolute inset-0
+        transition-all duration-700 ease-out
+        ${active
+          ? "opacity-100 scale-100 z-20"
+          : "opacity-0 scale-95 z-10"}
+      `}
+    >
+      <video
+        ref={videoRef}
+        src={src}
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        className="w-full h-full object-cover"
+      />
+    </div>
   );
 }

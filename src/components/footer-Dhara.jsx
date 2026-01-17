@@ -2,123 +2,119 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="relative bg-black border-t border-white/20">
+    <footer
+      className="
+        relative z-20
+        bg-white text-gray-700
+        dark:bg-black dark:text-gray-300
+        border-t border-black/10 dark:border-white/10
+      "
+    >
+      <div className="max-w-7xl mx-auto px-6 py-24">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-16">
 
-      {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
-
-        {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-
-          {/* Brand */}
+          {/* ================= LOGO ================= */}
           <div>
             <img
-              src="/logo.png"
+              src="/logo-light.png"
               alt="Arithwise"
-              className="h-13 w-auto mb-4"
+              className="hidden dark:block h-[110px] w-auto mb-6"
+            />
+            <img
+              src="/logo-dark.png"
+              alt="Arithwise"
+              className="block dark:hidden h-[110px] w-auto mb-6"
             />
 
-            <p className="text-white/90 text-[15px] font-medium leading-relaxed max-w-sm">
-              Building intelligent, scalable and modern digital solutions
-              with precision and purpose.
+            <p className="text-base opacity-80">
+              Your Solution Engine!
             </p>
           </div>
 
-          {/* Links */}
-          <div className="flex gap-16">
-            {/* Company */}
-            <div>
-              <h4 className="text-white text-[13px] font-bold tracking-[0.25em] mb-4 uppercase">
-                Company
-              </h4>
-              <ul className="space-y-3 text-[15px] font-medium text-white/90">
-                {["Our Story", "Solutions", "Opportunities"].map(item => (
-                  <li key={item}>
-                    <Link
-                      to={`/${item.toLowerCase()}`}
-                      className="hover:text-white transition"
-                    >
-                      {item}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Products */}
-            <div>
-              <h4 className="text-white text-[13px] font-bold tracking-[0.25em] mb-4 uppercase">
-                Products
-              </h4>
-              <ul className="space-y-3 text-[15px] font-medium text-white/90">
-                {["Audiowise", "Login"].map(item => (
-                  <li key={item}>
-                    <Link
-                      to={`/${item.toLowerCase()}`}
-                      className="hover:text-white transition"
-                    >
-                      {item}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Contact */}
+          {/* ================= NAV LINKS ================= */}
           <div>
-            <h4 className="text-white text-[13px] font-bold tracking-[0.25em] mb-4 uppercase">
-              Contact
-            </h4>
-
-            <p className="text-white/90 text-[15px] font-medium mb-2">
-              career@arithwise.com
-            </p>
-
-            <p className="text-white/80 text-[14px] leading-snug mb-4">
-              📍 Nagpur, Maharashtra, India
-            </p>
-
-            <a
-              href="https://maps.app.goo.gl/tHM5DLH54UJKhWS1A" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-                inline-flex px-5 py-2 text-[14px] font-semibold
-                text-white rounded-full border border-white/60
-                hover:bg-white hover:text-black
-                transition-all duration-300
-              "
-            >
-              View Location
-            </a>
+            <h4 className="text-xl font-semibold mb-5">Company</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  to="/"
+                  className="hover:text-purple-500 transition"
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/about"
+                  className="hover:text-purple-500 transition"
+                >
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/services"
+                  className="hover:text-purple-500 transition"
+                >
+                  Services
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/career"
+                  className="hover:text-purple-500 transition"
+                >
+                  Careers
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/contact"
+                  className="hover:text-purple-500 transition"
+                >
+                  Contact
+                </Link>
+              </li>
+            </ul>
           </div>
+
+          {/* ================= SERVICES ================= */}
+          <div>
+            <h4 className="text-xl font-semibold mb-5">Services</h4>
+            <ul className="space-y-3">
+              <li className="hover:text-purple-500 transition cursor-default">
+                Data Analytics
+              </li>
+              <li className="hover:text-purple-500 transition cursor-default">
+                Software Development
+              </li>
+              <li className="hover:text-purple-500 transition cursor-default">
+                Cloud Solutions
+              </li>
+              <li className="hover:text-purple-500 transition cursor-default">
+                Managed IT Services
+              </li>
+            </ul>
+          </div>
+
+          {/* ================= CONTACT ================= */}
+          <div>
+            <h4 className="text-xl font-semibold mb-5">Contact Info</h4>
+            <p className="font-medium">Arithwise Solutions Pvt Ltd</p>
+            <p className="text-sm opacity-80 mt-2">
+              Nagpur – 440025
+            </p>
+            <p className="text-sm opacity-80 mt-2">
+              info@arithwise.com
+            </p>
+          </div>
+
         </div>
+      </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-10 pt-5 border-t border-white/20
-        flex flex-col md:flex-row items-center justify-between gap-3">
-
-          <p className="text-white/80 text-[13px] font-medium tracking-wide">
-            © {new Date().getFullYear()} Arithwise. All rights reserved.
-          </p>
-
-          <p className="text-white/80 text-[13px] font-medium tracking-wide">
-            The Solution Engine ⚡
-          </p>
-        </div>
-
-        {/* Background Text */}
-        <h1
-          className="
-            absolute bottom-4 right-4
-            text-[90px] font-extrabold tracking-[0.25em]
-            text-white/[0.03]
-            select-none pointer-events-none
-          "
-        >
-          ARITHWISE
-        </h1>
+      {/* ================= COPYRIGHT ================= */}
+      <div className="text-center text-sm py-5 opacity-70 border-t border-black/5 dark:border-white/10">
+        © 2025 Arithwise. All Rights Reserved.
       </div>
     </footer>
   );

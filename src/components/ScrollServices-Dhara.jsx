@@ -1,8 +1,7 @@
-import { useState } from "react";
-import ServiceItem from "./Serviceitem-Dhara";
+import { useEffect, useRef, useState } from "react";
 import ServiceVideo from "./Servicevideo-Dhara";
 
-// SERVICES DATA (refined & premium)
+/* ================= SERVICES DATA ================= */
 const services = [
   {
     id: "advanced-analytics",
@@ -17,10 +16,6 @@ const services = [
       "Operational & Performance Analytics",
       "Data Strategy & Advisory",
       "Enterprise Data Warehousing",
-      "Data Governance & Quality",
-      "Lifecycle & Metadata Management",
-      "Marketing & Growth Analytics",
-      "Supply Chain Intelligence",
     ],
     video: "/videos/analytics.mp4",
     cta: "Explore Analytics",
@@ -52,7 +47,6 @@ const services = [
       "Infrastructure Monitoring",
       "Network & System Management",
       "Security & Patch Management",
-      "Platform Upgrades & Optimization",
     ],
     video: "/videos/IT.mp4",
     cta: "See How It Works",
@@ -90,44 +84,92 @@ const services = [
   },
 ];
 
-
-
+/* ================= COMPONENT ================= */
 export default function ScrollServices() {
   const [active, setActive] = useState(0);
+  const sectionRefs = useRef([]);
+
+  /* ===== Intersection Observer (ROCK SOLID) ===== */
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = Number(entry.target.dataset.index);
+            setActive(index);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: "-40% 0px -40% 0px", // center of screen
+        threshold: 0,
+      }
+    );
+
+    sectionRefs.current.forEach((el) => el && observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section className="bg-black text-white px-6 py-24">
-  <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-20">
+    <section className="relative w-full bg-background text-foreground pt-[104px]">
+      <div className="max-w-7xl mx-auto px-6 py-24">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-24">
 
-    {/* LEFT — FLOATING SERVICES */}
-    <div className="space-y-40">
-      {services.map((service, index) => (
-        <ServiceItem
-          key={service.id}
-          index={index}
-          label={service.label}
-          title={service.title}
-          description={service.description}
-          features={service.features}
-          cta={service.cta}
-          setActive={setActive}
-        />
-      ))}
-    </div>
+          {/* ================= LEFT CONTENT ================= */}
+          <div className="flex flex-col gap-[220px]">
+            {services.map((service, index) => (
+              <div
+                key={service.id}
+                ref={(el) => (sectionRefs.current[index] = el)}
+                data-index={index}
+              >
+                <span className="block mb-4 text-sm tracking-[0.3em] uppercase font-semibold text-fuchsia-500">
+                  {service.label}
+                </span>
 
-    {/* RIGHT — STICKY VIDEO */}
-    <div className="sticky top-32 h-[420px] rounded-2xl overflow-hidden bg-white/5 backdrop-blur-xl shadow-2xl">
-      {services.map((service, index) => (
-        <ServiceVideo
-          key={service.id}
-          src={service.video}
-          active={active === index}
-        />
-      ))}
-    </div>
+                <h2 className="text-[clamp(2.4rem,4vw,3.4rem)] font-extrabold">
+                  {service.title}
+                </h2>
 
-  </div>
-</section>
+                <p className="mt-5 text-lg text-foreground/70 max-w-2xl">
+                  {service.description}
+                </p>
 
+                <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-4">
+                  {service.features.map((item, i) => (
+                    <div key={i} className="flex gap-3 text-base">
+                      <span className="text-fuchsia-500">✓</span>
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <button className="mt-10 px-8 py-4 rounded-full font-semibold text-white bg-gradient-to-r from-fuchsia-600 to-purple-700">
+                  {service.cta}
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* ================= RIGHT STICKY VIDEO ================= */}
+          <div className="relative min-h-[1200px]">
+            <div className="sticky top-[140px]">
+              <div className="relative aspect-square w-full max-w-[420px] mx-auto overflow-hidden rounded-3xl">
+                {services.map((service, index) => (
+                  <ServiceVideo
+                    key={service.id}
+                    src={service.video}
+                    active={active === index}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
   );
 }

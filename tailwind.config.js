@@ -1,10 +1,22 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: ["class"],
+  darkMode: "class",
 
   content: [
     "./index.html",
     "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+
+  safelist: [
+    "scale-100",
+    "scale-95",
+    "scale-90",
+    "opacity-100",
+    "opacity-80",
+    "opacity-60",
+    "translate-y-0",
+    "translate-y-4",
+    "translate-y-8",
   ],
 
   theme: {
@@ -31,7 +43,7 @@ export default {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
-        
+
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -61,6 +73,7 @@ export default {
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
 
+        /* Optional charts (kept from first config) */
         chart: {
           1: "hsl(var(--chart-1))",
           2: "hsl(var(--chart-2))",
@@ -115,5 +128,7 @@ export default {
     },
   },
 
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+  ],
 };
