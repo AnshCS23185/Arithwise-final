@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import useTheme from "./useTheme";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [darkMode, setDarkMode] = useState(
-    localStorage.theme === "dark"
-  );
+  const [theme, setTheme] = useTheme();
+  const location = useLocation();
+
+  const isHome = location.pathname === "/";
 
   const navItems = [
     { label: "Our Story", path: "/about" },
@@ -16,56 +19,58 @@ export default function Header() {
     { label: "Audiowise", path: "/audiowise" },
   ];
 
-  /* Scroll detection */
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    const onScroll = () => setScrolled(window.scrollY > 20);
 
-  /* Dark mode handler */
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-      localStorage.theme = "dark";
+    if (isHome) {
+      window.addEventListener("scroll", onScroll);
     } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.theme = "light";
+      setScrolled(true);
     }
-  }, [darkMode]);
+
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome]);
 
   return (
     <header
       className={`
-        fixed top-0 w-full z-50 transition-all duration-300
-        ${
-          scrolled
-            ? "bg-black/80 dark:bg-black/80 backdrop-blur-md border-b border-white/20"
-            : "bg-transparent"
-        }
+        fixed top-0 left-0 w-full z-50
+        h-[88px]                          /* slightly taller for logo */
+        backdrop-blur-xl
+        border-b border-white/15
+        transition-all duration-300
+        ${scrolled ? "bg-black/55" : "bg-black/35"}
       `}
     >
-      {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
+      <div className="w-full h-full flex items-center px-10">
 
-        {/* Logo */}
-        <Link to="/" className="flex items-center w-[280px]">
+        {/* ================= LOGO (HOME LINK) ================= */}
+        <Link
+          to="/"
+          className="flex items-center shrink-0 hover:opacity-90 transition"
+        >
           <img
             src="/logo.png"
             alt="Arithwise"
-            className="h-[88px] w-full object-contain cursor-pointer"
+            className="
+              h-[84px]            /* 🔥 BIGGER LOGO */
+              w-auto
+              object-contain
+            "
           />
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-14">
+        {/* ================= DESKTOP NAV ================= */}
+        <nav className="hidden lg:flex flex-1 justify-center gap-14">
           {navItems.map((item) => (
             <Link
-              key={item.path}
+              key={item.label}
               to={item.path}
               className="
-                relative text-[16px] font-semibold tracking-wide
-                text-white dark:text-white
+                relative
+                text-[18px] font-medium
+                text-white/90 hover:text-white
+                transition-colors duration-300
                 after:absolute after:left-0 after:-bottom-1
                 after:h-[2px] after:w-0 after:bg-white
                 after:transition-all after:duration-300
@@ -77,38 +82,25 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Right Section */}
-        <div className="flex items-center gap-5">
+        {/* ================= RIGHT SECTION ================= */}
+        <div className="flex items-center gap-6">
 
-          {/* 🌙 Theme Toggle */}
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className="
-              hidden lg:flex items-center justify-center
-              w-10 h-10 rounded-full
-              border border-white/40
-              text-white
-              hover:bg-white hover:text-black
-              transition-all duration-300
-            "
-            aria-label="Toggle Theme"
-          >
-            {darkMode ? "☀️" : "🌙"}
-          </button>
+          <ThemeToggle theme={theme} setTheme={setTheme} />
 
-          {/* CTA */}
           <Link
             to="/contact"
             className="
               hidden lg:inline-flex items-center
-              px-6 py-2 text-[14px] font-semibold tracking-wide
-              text-white rounded-full
-              border-2 border-white
+              px-6 py-2.5
+              text-[15px] font-semibold
+              rounded-full
+              border border-white/70
+              text-white
               hover:bg-white hover:text-black
               transition-all duration-300
             "
           >
-            Let's Connect
+            Let’s Connect
           </Link>
 
           {/* Mobile Menu Button */}
@@ -123,53 +115,37 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* ================= MOBILE MENU ================= */}
       {open && (
-        <div className="lg:hidden bg-black/95 backdrop-blur-md border-t border-white/20">
-          <nav className="flex flex-col px-6 py-6 gap-6">
-
+        <div className="lg:hidden bg-black/70 backdrop-blur-xl border-t border-white/15">
+          <nav className="flex flex-col px-8 py-6 gap-6">
             {navItems.map((item) => (
               <Link
-                key={item.path}
+                key={item.label}
                 to={item.path}
                 onClick={() => setOpen(false)}
-                className="
-                  text-[18px] font-semibold tracking-wide
-                  text-white hover:pl-2 transition-all duration-300
-                "
+                className="text-[18px] font-medium text-white"
               >
                 {item.label}
               </Link>
             ))}
 
-            {/* Mobile Theme Toggle */}
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="
-                mt-4 py-3 rounded-full
-                border border-white
-                text-white font-semibold
-                transition-all duration-300
-              "
-            >
-              {darkMode ? "Switch to Light ☀️" : "Switch to Dark 🌙"}
-            </button>
-
             <Link
               to="/contact"
               onClick={() => setOpen(false)}
               className="
-                mt-2 inline-flex justify-center
-                px-6 py-3 text-[15px] font-semibold
-                text-white rounded-full
-                border-2 border-white
+                mt-4 inline-flex justify-center
+                px-6 py-3
+                text-[16px] font-semibold
+                rounded-full
+                border border-white
+                text-white
                 hover:bg-white hover:text-black
                 transition-all duration-300
               "
             >
               Get in Touch
             </Link>
-
           </nav>
         </div>
       )}

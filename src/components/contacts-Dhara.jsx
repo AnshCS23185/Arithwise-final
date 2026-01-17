@@ -5,28 +5,63 @@ export default function Contact() {
   const [intent, setIntent] = useState(null);
 
   return (
-    <section className="min-h-screen bg-black text-white flex items-center justify-center px-6">
-      <div className="max-w-3xl w-full text-center">
+    <section
+      className="
+        min-h-screen flex items-center justify-center px-6
+        bg-gradient-to-b from-white via-white to-purple-50
+        dark:from-black dark:via-black dark:to-[#120818]
+        transition-colors duration-500
+      "
+    >
+      <div className="max-w-4xl w-full text-center relative z-10">
 
-        {/* INTENT SELECTION */}
+        {/* INTRO */}
         {!intent && (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
           >
-            <h1 className="text-4xl md:text-6xl font-semibold mb-12">
+            <h1
+              className="
+                text-4xl md:text-6xl font-bold mb-6
+                text-gray-900 dark:text-white
+              "
+            >
               Why are you here today?
             </h1>
 
-            <div className="flex flex-col md:flex-row gap-6 justify-center">
-              <IntentButton label="Start a project" onClick={() => setIntent("project")} />
-              <IntentButton label="Join our team" onClick={() => setIntent("career")} />
-              <IntentButton label="Just say hello" onClick={() => setIntent("hello")} />
+            <p
+              className="
+                text-lg md:text-xl mb-14
+                text-gray-600 dark:text-white/70
+              "
+            >
+              Tell us what you’re looking for and we’ll guide you forward.
+            </p>
+
+            {/* INTENT CARDS */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <IntentCard
+                title="Start a project"
+                desc="Have an idea or problem to solve?"
+                onClick={() => setIntent("project")}
+              />
+              <IntentCard
+                title="Join our team"
+                desc="Looking to grow with us?"
+                onClick={() => setIntent("career")}
+              />
+              <IntentCard
+                title="Just say hello"
+                desc="Quick message or question"
+                onClick={() => setIntent("hello")}
+              />
             </div>
           </motion.div>
         )}
 
-        {/* INTENT FORMS */}
+        {/* FORMS */}
         <AnimatePresence>
           {intent === "project" && <ProjectForm onBack={() => setIntent(null)} />}
           {intent === "career" && <CareerForm onBack={() => setIntent(null)} />}
@@ -38,32 +73,52 @@ export default function Contact() {
   );
 }
 
-/* ---------- BUTTON ---------- */
-function IntentButton({ label, onClick }) {
+/* ---------------- INTENT CARD ---------------- */
+
+function IntentCard({ title, desc, onClick }) {
   return (
-    <button
+    <motion.button
+      whileHover={{ y: -6, scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className="px-8 py-6 rounded-2xl bg-white/5 border border-white/10
-      hover:border-purple-500 hover:bg-white/10 transition text-lg"
+      className="
+        text-left p-8 rounded-3xl
+        bg-white border border-gray-200
+        shadow-sm
+
+        dark:bg-white/5 dark:border-white/10
+
+        hover:border-purple-500
+        hover:shadow-[0_25px_60px_rgba(168,85,247,0.25)]
+        transition-all duration-300
+      "
     >
-      {label}
-    </button>
+      <h3
+        className="
+          text-xl font-semibold mb-3
+          text-gray-900 dark:text-white
+        "
+      >
+        {title}
+      </h3>
+      <p
+        className="
+          text-gray-600 dark:text-white/65
+        "
+      >
+        {desc}
+      </p>
+    </motion.button>
   );
 }
 
-/* ---------- FORMS ---------- */
+/* ---------------- FORMS ---------------- */
 
 function ProjectForm({ onBack }) {
   return (
     <FormWrapper title="Tell us about your project" onBack={onBack}>
       <input className="input mb-4" placeholder="Your name" />
       <input className="input mb-4" placeholder="Company name" />
-      <select className="input mb-4">
-        <option>Estimated budget</option>
-        <option>₹50k – ₹1L</option>
-        <option>₹1L – ₹5L</option>
-        <option>₹5L+</option>
-      </select>
       <textarea className="input mb-6" rows="4" placeholder="Project details" />
       <SubmitButton label="Request proposal" />
     </FormWrapper>
@@ -75,8 +130,6 @@ function CareerForm({ onBack }) {
     <FormWrapper title="Apply to join our team" onBack={onBack}>
       <input className="input mb-4" placeholder="Your name" />
       <input className="input mb-4" placeholder="Role you're applying for" />
-      <input className="input mb-4" placeholder="Portfolio / GitHub link" />
-      <textarea className="input mb-6" rows="4" placeholder="Short introduction" />
       <SubmitButton label="Apply now" />
     </FormWrapper>
   );
@@ -87,27 +140,47 @@ function HelloForm({ onBack }) {
     <FormWrapper title="Say hello 👋" onBack={onBack}>
       <input className="input mb-4" placeholder="Your name" />
       <textarea className="input mb-6" rows="4" placeholder="Your message" />
-      <SubmitButton label="Send hello" />
+      <SubmitButton label="Send message" />
     </FormWrapper>
   );
 }
 
-/* ---------- SHARED ---------- */
+/* ---------------- SHARED ---------------- */
 
 function FormWrapper({ title, children, onBack }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
+      initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
-      className="mt-16 bg-white/5 border border-white/10
-      backdrop-blur-xl rounded-3xl p-8 text-left"
+      transition={{ duration: 0.4 }}
+      className="
+        mt-16 max-w-xl mx-auto
+        rounded-3xl p-10 text-left
+        bg-white border border-gray-200 shadow-xl
+
+        dark:bg-white/5 dark:border-white/10
+        dark:backdrop-blur-xl
+      "
     >
-      <h2 className="text-2xl font-semibold mb-6">{title}</h2>
+      <h2
+        className="
+          text-2xl font-semibold mb-6
+          text-gray-900 dark:text-white
+        "
+      >
+        {title}
+      </h2>
+
       {children}
+
       <button
         onClick={onBack}
-        className="mt-4 text-sm text-purple-400"
+        className="
+          mt-4 text-sm font-medium
+          text-purple-600 hover:underline
+          dark:text-purple-400
+        "
       >
         ← Change intent
       </button>
@@ -118,8 +191,13 @@ function FormWrapper({ title, children, onBack }) {
 function SubmitButton({ label }) {
   return (
     <button
-      className="w-full py-4 rounded-xl font-medium text-black
-      bg-gradient-to-r from-purple-500 to-white"
+      className="
+        w-full py-4 rounded-xl font-semibold
+        text-white
+        bg-gradient-to-r from-purple-600 to-fuchsia-600
+        shadow-[0_12px_35px_rgba(168,85,247,0.45)]
+        hover:opacity-90 transition
+      "
     >
       {label}
     </button>

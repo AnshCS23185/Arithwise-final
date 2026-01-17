@@ -4,15 +4,15 @@ export default function WhoWeAre() {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const rotateX = useTransform(y, [-50, 50], [6, -6]);
-  const rotateY = useTransform(x, [-50, 50], [-6, 6]);
+  const rotateX = useTransform(y, [-50, 50], [8, -8]);
+  const rotateY = useTransform(x, [-50, 50], [-8, 8]);
 
   function handleMouseMove(e) {
     const rect = e.currentTarget.getBoundingClientRect();
     const posX = e.clientX - rect.left - rect.width / 2;
     const posY = e.clientY - rect.top - rect.height / 2;
-    x.set(posX / 8);
-    y.set(posY / 8);
+    x.set(posX / 6);
+    y.set(posY / 6);
   }
 
   function resetTilt() {
@@ -21,33 +21,46 @@ export default function WhoWeAre() {
   }
 
   return (
-    <section className="relative bg-black text-white py-36 overflow-hidden">
-      
-      {/* Ambient glow */}
-      <div className="absolute inset-0">
-        <div className="absolute left-[-25%] top-1/2 w-[800px] h-[800px] bg-purple-600/20 blur-[200px]" />
+    <section className="relative bg-background text-foreground py-28 overflow-hidden">
+
+      {/* LIGHT MODE GRADIENT */}
+      <div className="
+        absolute inset-0 pointer-events-none
+        opacity-100 dark:opacity-0
+        transition-opacity duration-500
+        bg-[radial-gradient(900px_500px_at_30%_50%,rgba(168,85,247,0.18),transparent_65%)]
+      " />
+
+      {/* DARK MODE GLOW */}
+      <div className="
+        absolute inset-0 pointer-events-none
+        opacity-0 dark:opacity-100
+        transition-opacity duration-500
+      ">
+        <div className="absolute left-[-20%] top-1/2 w-[900px] h-[900px] bg-purple-600/25 blur-[220px]" />
       </div>
 
-      {/* ===== STRICT GRID ===== */}
-      <div className="relative max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      {/* CONTENT */}
+      <div className="
+        relative max-w-[1500px] mx-auto
+        px-2 sm:px-4 lg:px-6
+        grid grid-cols-1 lg:grid-cols-2
+        gap-24 items-center
+      ">
 
-        {/* ================= VIDEO (LEFT COLUMN ONLY) ================= */}
+        {/* VIDEO */}
         <motion.div
           onMouseMove={handleMouseMove}
           onMouseLeave={resetTilt}
           style={{ rotateX, rotateY }}
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="w-full"
+          transition={{ duration: 0.9 }}
         >
-          <div className="relative rounded-3xl p-[2px]">
-            {/* Gradient border */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 opacity-70 blur-[2px]" />
-
-            {/* Video container */}
-            <div className="relative rounded-3xl overflow-hidden bg-white/5 border border-white/10 aspect-[16/10]">
+          <div className="relative rounded-[36px] p-[3px]">
+            <div className="absolute inset-0 rounded-[36px] bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 opacity-80 blur-[3px]" />
+            <div className="relative rounded-[32px] overflow-hidden bg-background/70 border border-border backdrop-blur-xl aspect-[16/9]">
               <video
                 src="/videos/WhoWeAre.mp4"
                 autoPlay
@@ -60,52 +73,62 @@ export default function WhoWeAre() {
           </div>
         </motion.div>
 
-        {/* ================= TEXT (RIGHT COLUMN) ================= */}
+        {/* TEXT */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className="relative z-10"
+          transition={{ duration: 0.9, delay: 0.1 }}
         >
-          <span className="text-sm tracking-widest uppercase text-purple-400">
+          <span className="text-base tracking-[0.35em] uppercase text-purple-500 font-medium">
             Who We Are
           </span>
 
-          <h2 className="mt-4 text-5xl xl:text-6xl font-semibold leading-tight">
+          <h2 className="mt-6 text-6xl xl:text-7xl font-semibold leading-[1.05]">
             The Solution Engine <br />
             Your Business Deserves.
           </h2>
 
-          <p className="mt-6 text-lg text-white/70 max-w-xl">
-            We architect scalable, high-performance systems that evolve with your ambition — not your overheads.
+          <p className="mt-8 text-2xl text-foreground/70 max-w-2xl leading-relaxed">
+            We architect scalable, high-performance systems that evolve with your ambition —
+            not your overheads.
           </p>
 
-          <ul className="mt-8 space-y-4 text-white/85">
-            <li className="flex items-center gap-3">
-              <span className="text-purple-400">✓</span>
+          <ul className="mt-12 space-y-6 text-lg text-foreground/80">
+            <li className="flex items-start gap-4">
+              <span className="text-purple-500 text-xl">✓</span>
               Business-first problem solving
             </li>
-            <li className="flex items-center gap-3">
-              <span className="text-purple-400">✓</span>
+            <li className="flex items-start gap-4">
+              <span className="text-purple-500 text-xl">✓</span>
               Modern technology & agile methodology
             </li>
-            <li className="flex items-center gap-3">
-              <span className="text-purple-400">✓</span>
+            <li className="flex items-start gap-4">
+              <span className="text-purple-500 text-xl">✓</span>
               Human-centered engineering
             </li>
           </ul>
 
-          <div className="mt-10">
+          {/* ✅ UPDATED BUTTON (MATCHES "WHAT IS ARITHWISE") */}
+          <div className="mt-14">
             <a
               href="#"
-              className="inline-flex items-center px-7 py-3 rounded-full border border-white/20 hover:border-purple-400 hover:text-purple-400 transition-all"
+              className="
+                inline-flex items-center justify-center
+                px-10 py-4
+                text-lg font-semibold text-white
+                rounded-full
+                bg-gradient-to-r from-purple-600 to-pink-500
+                shadow-[0_12px_40px_rgba(168,85,247,0.45)]
+                hover:scale-[1.04]
+                hover:shadow-[0_18px_60px_rgba(168,85,247,0.65)]
+                transition-all duration-300
+              "
             >
               Learn More →
             </a>
           </div>
         </motion.div>
-
       </div>
     </section>
   );
