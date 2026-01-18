@@ -16,7 +16,7 @@ export default function Header() {
     { label: "Solutions", path: "/services" },
     { label: "Opportunities", path: "/career" },
     { label: "Login", path: "/login" },
-    { label: "Audiowise", path: "/audiowise" },
+    { label: "Audiowise", path: "" },
   ];
 
   useEffect(() => {

@@ -23,31 +23,45 @@ export default function WhoWeAre() {
   return (
     <section className="relative bg-background text-foreground py-28 overflow-hidden">
 
-      {/* LIGHT MODE GRADIENT */}
-      <div className="
-        absolute inset-0 pointer-events-none
-        opacity-100 dark:opacity-0
-        transition-opacity duration-500
-        bg-[radial-gradient(900px_500px_at_30%_50%,rgba(168,85,247,0.18),transparent_65%)]
-      " />
+      {/* ================= TOP DOWNWARD BLEND (THIS FIXES EVENNESS) ================= */}
+     {/* ================= STRONG MAGENTA DOWNWARD BLEND ================= */}
+<div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/45 to-transparent" />
 
-      {/* DARK MODE GLOW */}
-      <div className="
-        absolute inset-0 pointer-events-none
-        opacity-0 dark:opacity-100
-        transition-opacity duration-500
-      ">
+<div className="absolute inset-0 bg-gradient-to-b from-fuchsia-600/25 via-purple-600/15 to-transparent" />
+
+ 
+
+      {/* ================= LIGHT MODE GRADIENT ================= */}
+      <div
+        className="
+          absolute inset-0 pointer-events-none
+          opacity-100 dark:opacity-0
+          transition-opacity duration-500
+          bg-[radial-gradient(900px_500px_at_30%_50%,rgba(168,85,247,0.18),transparent_65%)]
+        "
+      />
+
+      {/* ================= DARK MODE GLOW ================= */}
+      <div
+        className="
+          absolute inset-0 pointer-events-none
+          opacity-0 dark:opacity-100
+          transition-opacity duration-500
+        "
+      >
         <div className="absolute left-[-20%] top-1/2 w-[900px] h-[900px] bg-purple-600/25 blur-[220px]" />
       </div>
 
-      {/* CONTENT */}
-      <div className="
-        relative max-w-[1500px] mx-auto
-        px-2 sm:px-4 lg:px-6
-        grid grid-cols-1 lg:grid-cols-2
-        gap-24 items-center
-      ">
-
+      {/* ================= CONTENT ================= */}
+      <div
+        className="
+          relative z-10
+          max-w-[1500px] mx-auto
+          px-2 sm:px-4 lg:px-6
+          grid grid-cols-1 lg:grid-cols-2
+          gap-24 items-center
+        "
+      >
         {/* VIDEO */}
         <motion.div
           onMouseMove={handleMouseMove}
@@ -90,8 +104,8 @@ export default function WhoWeAre() {
           </h2>
 
           <p className="mt-8 text-2xl text-foreground/70 max-w-2xl leading-relaxed">
-            We architect scalable, high-performance systems that evolve with your ambition —
-            not your overheads.
+            We architect scalable, high-performance systems that evolve with your
+            ambition — not your overheads.
           </p>
 
           <ul className="mt-12 space-y-6 text-lg text-foreground/80">
@@ -109,7 +123,6 @@ export default function WhoWeAre() {
             </li>
           </ul>
 
-          {/* ✅ UPDATED BUTTON (MATCHES "WHAT IS ARITHWISE") */}
           <div className="mt-14">
             <a
               href="#"

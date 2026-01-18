@@ -13,8 +13,8 @@ import DarkAboutUs from "./components/about.jsx";
 import Services from "./components/services-Dhara.jsx";
 import Contact from "./components/contacts-Dhara.jsx";
 import Login from "./components/login-Dhara.jsx";
-import Career from "./components/career-Dhara.jsx";
-
+import Career from "./components/career-dhara.jsx";
+import Scrolltop from "./components/scrolltop.jsx";
 export default function App() {
   return (
     <Router>
@@ -39,7 +39,7 @@ export default function App() {
 
         {/* ================= HEADER ================= */}
         <Header />
-
+    <Scrolltop />
         {/* ================= PAGE CONTENT ================= */}
         <main className="relative z-10">
           <Routes>

@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
 import ServiceVideo from "./Servicevideo-Dhara";
+import { motion } from "framer-motion";
 
 /* ================= SERVICES DATA ================= */
 const services = [
@@ -16,6 +16,10 @@ const services = [
       "Operational & Performance Analytics",
       "Data Strategy & Advisory",
       "Enterprise Data Warehousing",
+      "Data Governance & Quality",
+      "Lifecycle & Metadata Management",
+      "Marketing & Growth Analytics",
+      "Supply Chain Intelligence",
     ],
     video: "/videos/analytics.mp4",
     cta: "Explore Analytics",
@@ -47,6 +51,7 @@ const services = [
       "Infrastructure Monitoring",
       "Network & System Management",
       "Security & Patch Management",
+      "Platform Upgrades & Optimization",
     ],
     video: "/videos/IT.mp4",
     cta: "See How It Works",
@@ -86,89 +91,110 @@ const services = [
 
 /* ================= COMPONENT ================= */
 export default function ScrollServices() {
-  const [active, setActive] = useState(0);
-  const sectionRefs = useRef([]);
-
-  /* ===== Intersection Observer (ROCK SOLID) ===== */
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = Number(entry.target.dataset.index);
-            setActive(index);
-          }
-        });
-      },
-      {
-        root: null,
-        rootMargin: "-40% 0px -40% 0px", // center of screen
-        threshold: 0,
-      }
-    );
-
-    sectionRefs.current.forEach((el) => el && observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section className="relative w-full bg-background text-foreground pt-[104px]">
-      <div className="max-w-7xl mx-auto px-6 py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-24">
+    
+ <section className="relative w-full text-foreground pt-[104px] overflow-hidden">
 
-          {/* ================= LEFT CONTENT ================= */}
-          <div className="flex flex-col gap-[220px]">
-            {services.map((service, index) => (
-              <div
-                key={service.id}
-                ref={(el) => (sectionRefs.current[index] = el)}
-                data-index={index}
-              >
-                <span className="block mb-4 text-sm tracking-[0.3em] uppercase font-semibold text-fuchsia-500">
-                  {service.label}
-                </span>
+  {/* GRADIENT BASE */}
+  <div
+    className="
+      absolute inset-0 -z-10
+      bg-gradient-to-b
+      from-[#faf7ff]
+      via-[#f4f1fb]
+      to-[#ffffff]
+      dark:from-[#1b0c2f]
+      dark:via-[#0e061a]
+      dark:to-[#07040d]
+    "
+  />
 
-                <h2 className="text-[clamp(2.4rem,4vw,3.4rem)] font-extrabold">
-                  {service.title}
-                </h2>
+  {/* AMBIENT GLOW */}
+  <div className="absolute inset-0 -z-10">
+    <div className="absolute -top-40 -left-40 w-[520px] h-[520px] bg-purple-200/40 blur-[160px] dark:hidden" />
+    <div className="absolute -top-40 -left-40 w-[520px] h-[520px] bg-fuchsia-500/20 blur-[160px] hidden dark:block" />
+  </div>
 
-                <p className="mt-5 text-lg text-foreground/70 max-w-2xl">
-                  {service.description}
-                </p>
+      <div className="max-w-7xl mx-auto px-6 py-16 space-y-28">
 
-                <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-4">
-                  {service.features.map((item, i) => (
-                    <div key={i} className="flex gap-3 text-base">
-                      <span className="text-fuchsia-500">✓</span>
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
 
-                <button className="mt-10 px-8 py-4 rounded-full font-semibold text-white bg-gradient-to-r from-fuchsia-600 to-purple-700">
-                  {service.cta}
-                </button>
-              </div>
-            ))}
-          </div>
+        {services.map((service) => (
+          <motion.div
+            key={service.id}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-14 items-start"
+          >
 
-          {/* ================= RIGHT STICKY VIDEO ================= */}
-          <div className="relative min-h-[1200px]">
-            <div className="sticky top-[140px]">
-              <div className="relative aspect-square w-full max-w-[420px] mx-auto overflow-hidden rounded-3xl">
-                {services.map((service, index) => (
-                  <ServiceVideo
-                    key={service.id}
-                    src={service.video}
-                    active={active === index}
-                  />
+            {/* LEFT — TEXT */}
+            <div>
+             <motion.span
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6 }}
+  className="block mb-3 text-sm tracking-[0.35em] uppercase font-semibold text-fuchsia-500"
+>
+  {service.label}
+</motion.span>
+
+<motion.h2
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.15, duration: 0.8 }}
+  className="text-[clamp(2.1rem,3.5vw,3rem)] font-extrabold leading-tight"
+>
+  {service.title}
+</motion.h2>
+
+
+              <p className="mt-3 text-lg leading-relaxed text-foreground/70 max-w-2xl">
+                {service.description}
+              </p>
+
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2.5">
+                {service.features.map((item, i) => (
+                  <div
+                    key={i}
+                    className="flex items-start gap-3 text-base text-foreground/80"
+                  >
+                    <span className="mt-1 text-fuchsia-500 text-lg">✓</span>
+                    <span>{item}</span>
+                  </div>
                 ))}
               </div>
-            </div>
-          </div>
 
-        </div>
+              <button className="
+                mt-6 inline-flex items-center gap-3 px-7 py-3.5
+                text-sm font-semibold text-white rounded-full
+                bg-gradient-to-r from-fuchsia-600 to-purple-700
+                transition-all duration-300
+                hover:scale-105 hover:shadow-[0_0_28px_rgba(217,70,239,0.45)]
+                active:scale-95
+              ">
+                {service.cta}
+              </button>
+            </div>
+
+            {/* RIGHT — STICKY VIDEO */}
+            <div className="relative">
+             <div className="
+  sticky top-[120px]
+  aspect-square w-full max-w-[420px] mx-auto
+  overflow-hidden rounded-3xl
+  bg-white/5 backdrop-blur-xl
+  ring-1 ring-white/10
+  shadow-[0_40px_120px_rgba(0,0,0,0.6)]
+">
+
+                <ServiceVideo src={service.video} />
+              </div>
+            </div>
+
+          </motion.div>
+        ))}
+
       </div>
     </section>
   );

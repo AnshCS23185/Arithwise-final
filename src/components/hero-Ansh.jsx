@@ -14,19 +14,21 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative w-full min-h-screen bg-black overflow-hidden">
+   <section className="relative w-full min-h-screen bg-black overflow-hidden isolate">
 
       {/* ================= SPLINE BACKGROUND ================= */}
       <div className="absolute inset-0 z-0 pointer-events-none will-change-transform">
-
         {/* LEFT SPLINE */}
         <div className="absolute left-0 top-1/2 -translate-y-1/2">
           <iframe
             src="https://my.spline.design/cubic-bB4qr5HkAWzZMHjtYV2sAwKD/"
             className="
-              w-[72vw] h-[105vh]
-              -mt-[2.5vh]
-              brightness-[0.55] contrast-[1.1] saturate-[0.9]
+             w-[72vw] h-[110vh]
+            block
+            -mt-[5vh]
+
+            brightness-[0.75] contrast-[1.15] saturate-[1.2]
+
             "
             frameBorder="0"
             allow="autoplay; fullscreen"
@@ -50,12 +52,12 @@ export default function Hero() {
       </div>
 
       {/* ================= SINGLE UNIFORM OVERLAY ================= */}
-      <div className="absolute inset-0 z-10 bg-black/55" />
+     <div className="absolute inset-0 z-10 bg-black/40" />
+
 
       {/* ================= TEXT CONTENT ================= */}
       <div className="relative z-20 flex items-start justify-center pt-[16vh] px-6">
         <div className="max-w-6xl w-full text-center">
-
           {/* MAIN TITLE */}
           <h1
             className="
@@ -93,22 +95,14 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* TAGLINE */}
-          <p
-            className="
-              mt-12 text-xl md:text-2xl
-              text-white/85
-              max-w-3xl mx-auto
-              leading-relaxed
-            "
-          >
+          {/* TAGLINE (MOVED UP) */}
+         <p className="mt-4 text-xl md:text-2xl text-white/85 max-w-3xl mx-auto leading-relaxed">
+
             We architect scalable, high-performance systems that evolve with your
             ambition — not your overheads.
           </p>
-
         </div>
       </div>
-
     </section>
   );
 }

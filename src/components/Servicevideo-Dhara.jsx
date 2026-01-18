@@ -1,38 +1,19 @@
-import { useEffect, useRef } from "react";
-
-export default function ServiceVideo({ src, active }) {
-  const videoRef = useRef(null);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (active) {
-      video.play().catch(() => {});
-    } else {
-      video.pause();
-    }
-  }, [active]);
-
+export default function ServiceVideo({ src }) {
   return (
-    <div
-      className={`
-        absolute inset-0
-        transition-all duration-700 ease-out
-        ${active
-          ? "opacity-100 scale-100 z-20"
-          : "opacity-0 scale-95 z-10"}
-      `}
-    >
+    <div className="relative w-full h-full">
+      {/* glow */}
+      <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-fuchsia-500/30 via-purple-500/20 to-transparent blur-2xl animate-pulse" />
+
       <video
-        ref={videoRef}
         src={src}
         muted
         loop
+        autoPlay
         playsInline
         preload="metadata"
-        className="w-full h-full object-cover"
+        className="relative z-10 w-full h-full object-cover rounded-3xl"
       />
     </div>
   );
 }
+

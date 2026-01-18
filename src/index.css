@@ -163,3 +163,23 @@
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(to bottom, #7c3aed, #ea580c);
 }
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-60px) translateX(40px); }
+}
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-60px) translateX(40px);
+  }
+}
+@keyframes float {
+  0%,100% {
+    transform: translate(0,0);
+  }
+  50% {
+    transform: translate(-40px, -30px);
+  }
+}

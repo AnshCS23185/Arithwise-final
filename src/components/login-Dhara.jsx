@@ -6,11 +6,6 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    /* 
-      IMPORTANT:
-      - mt-[112px] offsets fixed header
-      - min-h-[calc(100vh-112px)] keeps full viewport height
-    */
     <div
       className="
         mt-[112px]
@@ -26,7 +21,6 @@ export default function Login() {
           text-white relative overflow-hidden
         "
       >
-        {/* Purple glow */}
         <div className="absolute -top-40 -left-40 w-[650px] h-[650px] bg-purple-600/30 blur-[220px]" />
 
         <motion.h1
@@ -39,11 +33,9 @@ export default function Login() {
         </motion.h1>
 
         <p className="relative text-xl leading-relaxed text-white/85 max-w-lg">
-          Log in to access your workspace, manage solutions, and
-          continue your journey with{" "}
-          <span className="text-purple-400 font-medium">
-            Arithwise
-          </span>.
+          Log in to access your workspace, manage solutions, and continue your
+          journey with{" "}
+          <span className="text-purple-400 font-medium">Arithwise</span>.
         </p>
       </div>
 
@@ -56,7 +48,6 @@ export default function Login() {
           relative overflow-hidden
         "
       >
-        {/* Background glow */}
         <div className="absolute w-[520px] h-[520px] bg-purple-600/20 blur-[240px]" />
 
         <motion.div
@@ -64,9 +55,9 @@ export default function Login() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
           className="
-            relative w-full max-w-lg
+            relative w-full max-w-md
             rounded-3xl
-            p-12
+           px-10 py-16
 
             bg-white/95 dark:bg-white/10
             backdrop-blur-xl
@@ -74,17 +65,16 @@ export default function Login() {
             shadow-[0_30px_90px_rgba(168,85,247,0.45)]
           "
         >
-          {/* Heading */}
           <h2 className="text-4xl font-semibold mb-2 text-black dark:text-white">
             Client Login
           </h2>
 
-          <p className="text-lg mb-12 text-gray-600 dark:text-white/65">
+          <p className="text-lg mb-8 text-gray-600 dark:text-white/65">
             Sign in to continue
           </p>
 
           {/* Username */}
-          <div className="mb-10">
+          <div className="mb-8">
             <label className="block text-base mb-3 text-gray-700 dark:text-white/75">
               Username
             </label>
@@ -92,7 +82,7 @@ export default function Login() {
               type="text"
               placeholder="Enter your username"
               className="
-                w-full py-4 px-5 rounded-xl
+                w-full py-3.5 px-5 rounded-xl
                 text-lg
                 bg-gray-100 dark:bg-white/10
                 border border-gray-300 dark:border-white/20
@@ -107,7 +97,7 @@ export default function Login() {
           </div>
 
           {/* Password */}
-          <div className="mb-8 relative">
+          <div className="mb-6 relative">
             <label className="block text-base mb-3 text-gray-700 dark:text-white/75">
               Password
             </label>
@@ -115,7 +105,7 @@ export default function Login() {
               type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
               className="
-                w-full py-4 px-5 pr-14 rounded-xl
+                w-full py-3.5 px-5 pr-14 rounded-xl
                 text-lg
                 bg-gray-100 dark:bg-white/10
                 border border-gray-300 dark:border-white/20
@@ -131,7 +121,7 @@ export default function Login() {
             <span
               onClick={() => setShowPassword(!showPassword)}
               className="
-                absolute right-5 top-[52px]
+                absolute right-5 top-[48px]
                 cursor-pointer
                 text-xl
                 text-gray-500 dark:text-white/60
@@ -144,18 +134,15 @@ export default function Login() {
           </div>
 
           {/* Remember Me */}
-          <div className="flex items-center gap-3 mb-12 text-base text-gray-600 dark:text-white/65">
-            <input
-              type="checkbox"
-              className="accent-purple-600 w-4 h-4"
-            />
+          <div className="flex items-center gap-3 mb-8 text-base text-gray-600 dark:text-white/65">
+            <input type="checkbox" className="accent-purple-600 w-4 h-4" />
             <span>Remember Me</span>
           </div>
 
           {/* Login Button */}
           <button
             className="
-              w-full py-4 mb-5
+              w-full py-3.5 mb-4
               rounded-xl
               text-lg font-semibold
               text-white
@@ -171,7 +158,7 @@ export default function Login() {
           {/* Admin Login */}
           <button
             className="
-              w-full py-4
+              w-full py-3.5
               rounded-xl
               text-lg font-semibold
               text-purple-600 dark:text-purple-400
