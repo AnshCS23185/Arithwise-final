@@ -1,9 +1,8 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useState,useRef,useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
-
 import { Eye, Target } from "lucide-react";
-
+import { Mic } from "lucide-react";
 export default function About() {
   const [activeTab, setActiveTab] = useState("vision");
 const intervalRef = useRef(null);
@@ -28,8 +27,13 @@ const handleTabChange = (tab) => {
 
   // Hooks MUST be inside component
   const { scrollYProgress } = useScroll();
-  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  // const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
+const [active, setActive] = useState(null);
+  const sectionRef = useRef(null);
+  const [mouse, setMouse] = useState({ x: -1000, y: -1000 });
 
+  const COLS = 30;   // small tiles
+  const ROWS = 18;
   return (
     <main
   className="
@@ -57,164 +61,161 @@ const handleTabChange = (tab) => {
 
       {/* ================= HERO ================= */}
 <section
-  className="
-    relative
-    min-h-screen
-    flex items-center justify-center
-    overflow-hidden
-    bg-white dark:bg-black
-    px-6 md:px-12 lg:px-20
-  "
->
-
-  {/* ===== GRID BACKGROUND ===== */}
-  <svg
-    className="absolute inset-0 w-full h-full opacity-[0.16] dark:opacity-[0.12]"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <defs>
-      <pattern
-        id="fullGrid"
-        width="64"
-        height="64"
-        patternUnits="userSpaceOnUse"
+      ref={sectionRef}
+      onMouseMove={(e) => {
+        const rect = sectionRef.current.getBoundingClientRect();
+        setMouse({
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+        });
+      }}
+      className="
+        relative min-h-screen overflow-hidden
+        flex items-center justify-center
+        bg-white dark:bg-black
+      "
+    >
+      {/* ===== TILE GRID ===== */}
+      <div
+        className="absolute inset-0 grid pointer-events-none"
+        style={{
+          gridTemplateColumns: `repeat(${COLS}, 1fr)`,
+          gridTemplateRows: `repeat(${ROWS}, 1fr)`,
+        }}
       >
-        <path
-          d="M 64 0 L 0 0 0 64"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1"
-        />
-      </pattern>
-    </defs>
-    <rect
-      width="100%"
-      height="100%"
-      fill="url(#fullGrid)"
-      className="text-black/20 dark:text-white/20"
-    />
-  </svg>
-<div className="
-  absolute inset-0
-  bg-gradient-to-br
-  from-purple-100/60
-  via-transparent
-  to-transparent
-  dark:from-black
-" />
-{/* Grid fade-out mask */}
-<div className="
-  absolute bottom-0 left-0 right-0 h-48
-  bg-gradient-to-b
-  from-transparent
-  via-white
-  to-white
-  dark:via-black dark:to-black
-  pointer-events-none
-" />
+        {Array.from({ length: COLS * ROWS }).map((_, i) => {
+          return (
+            <div
+              key={i}
+              className="border border-black/10 dark:border-white/10"
+              style={{
+                background: (() => {
+                  if (!sectionRef.current) return "transparent";
 
+                  const rect = sectionRef.current.getBoundingClientRect();
+                  const col = i % COLS;
+                  const row = Math.floor(i / COLS);
 
-  {/* ===== MAGENTA ENERGY BLOOM ===== */}
+                  const tileW = rect.width / COLS;
+                  const tileH = rect.height / ROWS;
+
+                  const cx = col * tileW + tileW / 2;
+                  const cy = row * tileH + tileH / 2;
+
+                  const dx = mouse.x - cx;
+                  const dy = mouse.y - cy;
+                  const dist = Math.sqrt(dx * dx + dy * dy);
+
+                  /* VERY TIGHT radius */
+                  const radius = 70;
+                  const strength = Math.max(0, 1 - dist / radius);
+
+                  if (strength <= 0) return "transparent";
+
+                  /* Controlled color palette */
+                  const palette = [
+                    "168,85,247",   // purple
+                    "236,72,153",   // magenta
+                    "0,0,0",        // black
+                    "255,255,255",  // white
+                  ];
+
+                  const color = palette[i % palette.length];
+
+                  return `rgba(${color}, ${strength * 0.75})`;
+                })(),
+                transition: "background 120ms ease-out",
+              }}
+            />
+          );
+        })}
+      </div>
+
+      {/* ===== CONTENT ===== */}
+      <motion.div
+        initial={{ opacity: 0, y: 60 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, ease: "easeOut" }}
+        className="
+          relative z-10
+          w-full max-w-6xl
+          text-center py-24 px-6
+        "
+      >
+        <h1
+          className="
+            text-[clamp(3.5rem,8.5vw,7.5rem)]
+            leading-[0.95]
+            tracking-[-0.02em]
+            font-semibold
+            text-black dark:text-white
+          "
+        >
+          Building{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-fuchsia-500">
+            Intelligent
+          </span>
+          <br />
+          <span className="font-medium">Digital Foundations</span>
+        </h1>
+
+        <p className="mt-10 text-lg md:text-xl text-black/70 dark:text-white/70 max-w-3xl mx-auto">
+          We turn complex systems into clarity, confidence, and outcomes.
+        </p>
+
+        <p className="mt-4 text-sm md:text-base uppercase tracking-widest text-black/50 dark:text-white/50">
+          Strategy · Data · Engineering · Aligned
+        </p>
+      </motion.div>
+
+      {/* ===== BOTTOM FADE (SECTION BLEND) ===== */}
+      <div
+        className="
+          absolute bottom-0 left-0 right-0 h-56
+          bg-gradient-to-b
+          from-transparent
+          via-white
+          to-white
+          dark:via-black dark:to-black
+          pointer-events-none
+        "
+      />
+      {/* ===== HERO → NEXT SECTION BLEND ===== */}
+<div className="pointer-events-none absolute bottom-0 left-0 right-0">
+
+  {/* Grid dissolving fade */}
   <div
     className="
-      absolute inset-0
-      bg-[radial-gradient(circle_at_60%_40%,rgba(168,85,247,0.22),transparent_55%)]
-      dark:bg-[radial-gradient(circle_at_60%_40%,rgba(168,85,247,0.32),transparent_55%)]
+      h-40
+      bg-gradient-to-b
+      from-transparent
+      via-white/60
+      to-white
+      dark:via-black/60 dark:to-black
     "
   />
 
-  {/* ===== CONTENT ===== */}
-  <motion.div
-    initial={{ opacity: 0, y: 60 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.9, ease: "easeOut" }}
+  {/* Soft brand color transition */}
+  <div
     className="
-      relative z-10
-      w-full
-      max-w-6xl
-      text-center
-      py-24
+      h-32
+      bg-gradient-to-b
+      from-white
+      via-purple-50
+      to-purple-100
+      dark:from-black
+      dark:via-[#120916]
+      dark:to-[#0b0610]
     "
-  >
-    
+  />
+</div>
 
-    {/* MAIN HEADLINE */}
-    <h1
-      className="
-      text-[clamp(3.5rem,8.5vw,7.5rem)]
-leading-[0.95]
-tracking-[-0.02em]
-
-        // text-[clamp(3rem,7.5vw,6.5rem)]
-        font-semibold
-        // leading-[1.1]
-        // tracking-tight
-        text-black dark:text-white
-      "
-    >
-      Building{" "}
-      <span className="relative inline-block font-semibold">
-        <span
-          className="
-            text-transparent bg-clip-text
-            bg-gradient-to-r from-purple-600 to-fuchsia-500
-          "
-        >
-          Intelligent
-        </span>
-
-        {/* underline accent */}
-        <motion.span
-          initial={{ width: 0 }}
-          animate={{ width: "100%" }}
-          transition={{ delay: 0.5, duration: 0.7 }}
-          className="
-            absolute left-0 -bottom-2 h-[4px]
-            bg-gradient-to-r from-purple-600 to-fuchsia-500
-          "
-        />
-      </span>
-      <br />
-      <span className="font-medium">Digital Foundations</span>
-    </h1>
-
-    {/* SUBTEXT */}
-    <motion.p
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.7 }}
-      className="
-        mt-10
-        text-lg md:text-xl
-        text-black/70 dark:text-white/70
-        max-w-3xl mx-auto
-      "
-    >
-      We turn complex systems into clarity, confidence, and outcomes.
-    </motion.p>
-
-    <motion.p
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.9 }}
-      className="
-        mt-4
-        text-sm md:text-base
-        uppercase tracking-widest
-        text-black/50 dark:text-white/50
-      "
-    >
-      Strategy · Data · Engineering · Aligned
-    </motion.p>
-
-  </motion.div>
-
-</section>
-
-
+    </section>
+  
 
       {/* ================= IDENTITY / POSITIONING ================= */}
-<section className="relative pt-24 pb-6 px-8 overflow-hidden bg-white dark:bg-black">
+<section className="relative pt-16 pb-8 px-8 overflow-hidden bg-white dark:bg-black">
+
 
 
 
@@ -269,11 +270,13 @@ tracking-[-0.02em]
 
     {/* Architectural Capability Bands */}
 {/* ================= CONTINUOUS CAPABILITY MANIFESTO ================= */}
-<section className="relative py-12 md:py-14 overflow-hidden">
+<section className="relative py-10 overflow-hidden">
+
 
   <div className="max-w-7xl mx-auto px-8">
 
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-y-10 md:gap-x-16 items-start">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-y-8 md:gap-x-12
+ items-start">
 
 
       {/* STEP 1 */}
@@ -389,32 +392,20 @@ tracking-[-0.02em]
 {/* ================= VISION & MISSION — GLORY SECTION ================= */}
 {/* ================= VISION & MISSION — COMPACT GLORY ================= */}
 {/* ================= VISION → MISSION (SCROLL MORPH) ================= */}
-<section className="relative py-16 overflow-hidden bg-white dark:bg-black">
+ 
+<section className="relative py-20 overflow-hidden bg-white dark:bg-black">
 
-  {/* Soft background glow */}
+
+  {/* Soft ambient background */}
   <div className="absolute inset-0 pointer-events-none">
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[480px] rounded-full bg-purple-600/20 blur-[160px]" />
+    <div className="absolute top-1/3 left-1/4 w-[420px] h-[420px] bg-purple-500/15 blur-[160px]" />
+    <div className="absolute bottom-1/4 right-1/4 w-[380px] h-[380px] bg-fuchsia-500/15 blur-[160px]" />
   </div>
 
-  <div className="relative max-w-5xl mx-auto px-8">
+  <div className="relative max-w-6xl mx-auto px-8">
 
-    {/* Section label */}
-    <motion.p
-      initial={{ opacity: 0, y: 10 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="text-center uppercase tracking-[0.3em] text-xs text-black/50 dark:text-white/50 "
-    >
-      Purpose & Direction
-    </motion.p>
-
-    {/* SINGLE HEADING (only once) */}
-    <motion.h2
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="mt-3 text-center text-[clamp(2.2rem,5vw,4rem)] font-semibold leading-tight"
-    >
+    {/* Heading */}
+    <h2 className="text-center text-4xl md:text-5xl font-semibold mb-12">
       Our{" "}
       <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-fuchsia-500">
         Vision
@@ -423,69 +414,111 @@ tracking-[-0.02em]
       <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-500 to-purple-600">
         Mission
       </span>
-    </motion.h2>
+    </h2>
 
-    {/* BOXES */}
-    <div className="mt-14 grid grid-cols-1 md:grid-cols-2 gap-8">
+    {/* GRID */}
+    <div
+      className="grid grid-cols-1 md:grid-cols-2 gap-12"
+      onMouseLeave={() => setActive(null)}
+    >
 
-      {/* VISION BOX */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="
-          p-8 rounded-3xl
-          bg-gradient-to-br from-purple-600 to-fuchsia-600
-          text-white
-          shadow-[0_24px_70px_rgba(168,85,247,0.45)]
-        "
-      >
-        <div className="mb-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-            <Eye className="w-5 h-5 text-white" />
-          </div>
-          <h3 className="text-xl font-semibold">Our Vision</h3>
-        </div>
+      {/* ================= LEFT : VISION ================= */}
+      <AnimatePresence mode="wait">
+        {active === "vision" ? (
+          <motion.div
+            key="vision-content"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 15 }}
+            transition={{ duration: 0.45 }}
+            className="
+              h-full p-14 rounded-3xl
+              bg-gradient-to-br from-purple-600 to-fuchsia-600
+              text-white flex flex-col justify-center
+              shadow-xl shadow-purple-600/20
+            "
+          >
+            <Eye className="w-12 h-12 mb-8 text-white/90" />
+            <p className="text-2xl md:text-[1.6rem] leading-relaxed font-medium max-w-[92%]">
+              We imagine a future where intelligent systems empower people,
+              clarity guides every decision, and technology becomes a force
+              for meaningful and sustainable progress.
+            </p>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="vision-title"
+            onMouseEnter={() => setActive("vision")}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="
+              h-full p-14 rounded-3xl
+              bg-gradient-to-br from-purple-600 to-fuchsia-600
+              text-white flex flex-col items-center justify-center
+              cursor-pointer
+              hover:scale-[1.02]
+              transition-transform
+            "
+          >
+            <Eye className="w-12 h-12 mb-6" />
+            <h3 className="text-3xl font-semibold">Our Vision</h3>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        <p className="text-base leading-relaxed text-white/90">
-          To build a future where intelligent systems empower people,
-          decisions are driven by clarity, and technology becomes a
-          force for meaningful and sustainable progress.
-        </p>
-      </motion.div>
-
-      {/* MISSION BOX */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: 0.05 }}
-        className="
-          p-8 rounded-3xl
-          bg-black text-white
-          border border-white/10
-          shadow-[0_24px_70px_rgba(0,0,0,0.45)]
-        "
-      >
-        <div className="mb-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-purple-600/20 flex items-center justify-center">
-            <Target className="w-5 h-5 text-purple-400" />
-          </div>
-          <h3 className="text-xl font-semibold">Our Mission</h3>
-        </div>
-
-        <p className="text-base leading-relaxed text-white/80">
-          Our mission is to design intelligent foundations by aligning
-          strategy, data, and engineering — enabling organizations to
-          move faster, think clearer, and grow with confidence.
-        </p>
-      </motion.div>
+      {/* ================= RIGHT : MISSION ================= */}
+      <AnimatePresence mode="wait">
+        {active === "mission" ? (
+          <motion.div
+            key="mission-content"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 15 }}
+            transition={{ duration: 0.45 }}
+            className="
+              h-full p-14 rounded-3xl
+              bg-neutral-900 text-white
+              border border-white/10
+              flex flex-col justify-center
+              shadow-xl shadow-black/30
+            "
+          >
+            <Target className="w-12 h-12 mb-8 text-purple-400" />
+            <p className="text-2xl md:text-[1.6rem] leading-relaxed font-medium text-white/85 max-w-[92%]">
+              We build intelligent foundations by aligning strategy, data,
+              and engineering—helping organizations move faster, think
+              clearer, and grow with confidence.
+            </p>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="mission-title"
+            onMouseEnter={() => setActive("mission")}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="
+              h-full p-14 rounded-3xl
+              bg-neutral-900 text-white
+              border border-white/10
+              flex flex-col items-center justify-center
+              cursor-pointer
+              hover:scale-[1.02]
+              transition-transform
+            "
+          >
+            <Target className="w-12 h-12 mb-6 text-purple-400" />
+            <h3 className="text-3xl font-semibold">Our Mission</h3>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
-
   </div>
 </section>
+
+
 {/* <div className="
   h-24
   bg-gradient-to-b
@@ -498,132 +531,138 @@ tracking-[-0.02em]
 
 {/* ================= FROM THE DESK ================= */}
 {/* ================= VOICE FROM THE DESK (UNIQUE) ================= */}
-<section className="relative py-28 overflow-hidden bg-white dark:bg-black">
+{/* ================= FROM THE DESK — CEO VOICE ================= */}
+{/* ================= FROM THE DESK — VOICE FLOW ================= */}
+<section className="relative py-24 overflow-hidden bg-white dark:bg-black">
 
-  {/* Ambient background glow (very subtle) */}
+
+  {/* Ambient gradient field */}
   <div className="absolute inset-0 pointer-events-none">
-    <div className="absolute top-1/2 left-[16%] -translate-y-1/2 w-[480px] h-[480px] bg-purple-600/15 blur-[180px] rounded-full" />
+    <div className="absolute top-[-30%] left-1/2 -translate-x-1/2 w-[1200px] h-[1200px]
+      bg-[radial-gradient(circle,rgba(168,85,247,0.18),transparent_60%)]" />
+    <div className="absolute bottom-[-25%] right-[10%] w-[900px] h-[900px]
+      bg-[radial-gradient(circle,rgba(236,72,153,0.16),transparent_60%)]" />
   </div>
 
-  <div className="relative max-w-7xl mx-auto px-10 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+  <div className="relative max-w-6xl mx-auto px-8">
 
-    {/* ================= LEFT : EDITORIAL TEXT ================= */}
+    {/* Header */}
     <motion.div
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      transition={{ duration: 0.9, ease: "easeOut" }}
+      className="mb-16"
     >
-      <p className="text-xs uppercase tracking-[0.35em] text-purple-600 mb-6">
-        Founder’s Desk
+      <p className="text-xs uppercase tracking-[0.5em] text-purple-600 mb-10">
+        From the Desk
       </p>
 
-      <h2 className="text-3xl md:text-4xl font-semibold leading-snug">
-        A note on building with <br />
-        <span className="text-purple-600 font-medium">
-          clarity
-        </span>
+      <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.05] tracking-[-0.025em] max-w-4xl">
+        Clarity is not simplicity.
+        <br />
+        It is choosing what deserves{" "}
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-fuchsia-500">
+          attention
+        </span>.
       </h2>
+    </motion.div>
 
-      {/* subtle divider */}
-      <div className="w-14 h-[2px] bg-purple-500 mt-6" />
+    {/* ===== VOICE LINE (LONGER, CALMER) ===== */}
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 1 }}
+     className="flex items-center gap-6 mb-16"
 
-      {/* editorial body */}
-      <div className="mt-8 pl-6 space-y-6 relative">
-        <span className="absolute left-0 top-2 h-20 w-[1px] bg-purple-300/60" />
+    >
 
-        <p className="text-[1.02rem] leading-[1.75] text-black/75 dark:text-white/75">
+      {/* Mic */}
+      <motion.div
+        animate={{ opacity: [0.4, 1, 0.4] }}
+        transition={{
+          duration: 4.5,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="text-purple-600"
+      >
+        <Mic size={26} />
+      </motion.div>
+
+      {/* Extended waveform */}
+      <div className="flex items-end gap-[7px] h-8">
+        {Array.from({ length: 28 }).map((_, i) => (
+          <motion.span
+            key={i}
+            className="w-[3px] rounded-full bg-gradient-to-t from-purple-600 via-fuchsia-500 to-purple-400"
+            animate={{
+              height: ["6px", "32px", "12px"],
+            }}
+            transition={{
+              duration: 4 + Math.random() * 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.12,
+            }}
+          />
+        ))}
+      </div>
+
+    </motion.div>
+
+    {/* ===== TEXT FLOW (NO BOX) ===== */}
+    <div className="relative max-w-4xl">
+
+      {/* Vertical gradient guide */}
+      <div className="absolute left-0 top-0 bottom-0 w-[3px]
+        bg-gradient-to-b from-purple-600 via-fuchsia-500 to-transparent" />
+
+      <div className="pl-10 space-y-10">
+
+        <p className="text-xl md:text-2xl leading-[1.8] text-black/85 dark:text-white/85">
           Arithwise was founded with a clear intent — to simplify how
           technology supports decision-making, scale, and long-term growth.
         </p>
 
-        <p className="text-[1.02rem] leading-[1.75] text-black/75 dark:text-white/75">
+        <p className="text-xl md:text-2xl leading-[1.8] text-black/80 dark:text-white/80">
           As organizations evolve, systems often become complex,
           fragmented, and difficult to manage. What begins as innovation
           gradually turns into overhead.
         </p>
 
-        <p className="text-[1.02rem] leading-[1.75] text-black/75 dark:text-white/75">
+        <p className="text-xl md:text-2xl leading-[1.8] text-black/80 dark:text-white/80">
           We focus on building intelligent foundations — systems that
           remain clear, resilient, and aligned with real business goals,
           even as complexity increases.
         </p>
-      </div>
 
-      <div className="mt-10">
-        <p className="font-medium">— Mr. Vishvesh Algeri</p>
-        <p className="text-sm text-black/50 dark:text-white/50">
-          Founder & CEO
-        </p>
-      </div>
-    </motion.div>
-
-    {/* ================= RIGHT : EDITORIAL QUOTE CARD ================= */}
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="
-        relative
-        h-[360px]
-        rounded-3xl
-        overflow-hidden
-        shadow-[0_40px_120px_rgba(0,0,0,0.25)]
-      "
-    >
-      {/* background image */}
-      <img
-        src="/desk.jpg"
-        alt="Founder perspective"
-        className="
-          absolute inset-0
-          w-full h-full
-          object-cover
-          scale-105
-          blur-[1.5px]
-        "
-      />
-
-      {/* overlay */}
-      <div className="
-        absolute inset-0
-        bg-gradient-to-br
-        from-purple-900/60
-        via-black/55
-        to-black/65
-      " />
-
-      {/* content */}
-      <div className="relative z-10 p-10 h-full flex flex-col justify-center text-white">
-
-        <p className="text-xs uppercase tracking-[0.3em] text-white/70 mb-4">
-          Framing the Perspective
-        </p>
-
-        <p className="text-[1.35rem] md:text-[1.5rem] font-medium leading-[1.6] max-w-[22rem]">
-          Clarity is not simplicity.
-          <br />
-          It is choosing what deserves
-          <br />
-          attention — and designing
-          <br />
-          everything else around it.
-        </p>
-
-        <div className="mt-8 h-[2px] w-14 bg-white/40" />
-
-        <p className="mt-4 text-sm text-white/70">
-          Guiding how we build at Arithwise
-        </p>
+        {/* Signature */}
+        <div className="pt-10">
+          <p className="text-lg font-medium tracking-tight">
+            — Vishvesh Algeri
+          </p>
+          <p className="text-sm tracking-wide text-black/50 dark:text-white/50 mt-1">
+            Founder & CEO
+          </p>
+        </div>
 
       </div>
-    </motion.div>
+    </div>
 
   </div>
+
+  {/* Bottom dissolve */}
+  <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none
+    bg-gradient-to-b from-transparent via-white to-white
+    dark:via-black dark:to-black
+  " />
+
 </section>
+
 
 
     </main>
   );
-}
+} 
