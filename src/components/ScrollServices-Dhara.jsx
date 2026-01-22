@@ -1,5 +1,6 @@
 import ServiceVideo from "./Servicevideo-Dhara";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 /* ================= SERVICES DATA ================= */
 const services = [
@@ -23,6 +24,7 @@ const services = [
     ],
     video: "/videos/analytics.mp4",
     cta: "Explore Analytics",
+    route: "/analytics",
   },
   {
     id: "cloud-platforms",
@@ -38,6 +40,7 @@ const services = [
     ],
     video: "/videos/cloud.mp4",
     cta: "View Cloud Solutions",
+    route: "/cloud",
   },
   {
     id: "managed-operations",
@@ -55,6 +58,7 @@ const services = [
     ],
     video: "/videos/IT.mp4",
     cta: "See How It Works",
+    route: "/it-operations",
   },
   {
     id: "software-engineering",
@@ -70,6 +74,7 @@ const services = [
     ],
     video: "/videos/programming.mp4",
     cta: "Build With Us",
+    route: "/software",
   },
   {
     id: "enterprise-systems",
@@ -86,37 +91,36 @@ const services = [
     ],
     video: "/videos/techno.mp4",
     cta: "Start a Conversation",
+    route: "/enterprise",
   },
 ];
 
 /* ================= COMPONENT ================= */
 export default function ScrollServices() {
   return (
-    
- <section className="relative w-full text-foreground pt-[104px] overflow-hidden">
+    <section className="relative w-full text-foreground pt-[104px] overflow-hidden">
 
-  {/* GRADIENT BASE */}
-  <div
-    className="
-      absolute inset-0 -z-10
-      bg-gradient-to-b
-      from-[#faf7ff]
-      via-[#f4f1fb]
-      to-[#ffffff]
-      dark:from-[#1b0c2f]
-      dark:via-[#0e061a]
-      dark:to-[#07040d]
-    "
-  />
+      {/* GRADIENT BASE */}
+      <div
+        className="
+          absolute inset-0 -z-10
+          bg-gradient-to-b
+          from-[#faf7ff]
+          via-[#f4f1fb]
+          to-[#ffffff]
+          dark:from-[#1b0c2f]
+          dark:via-[#0e061a]
+          dark:to-[#07040d]
+        "
+      />
 
-  {/* AMBIENT GLOW */}
-  <div className="absolute inset-0 -z-10">
-    <div className="absolute -top-40 -left-40 w-[520px] h-[520px] bg-purple-200/40 blur-[160px] dark:hidden" />
-    <div className="absolute -top-40 -left-40 w-[520px] h-[520px] bg-fuchsia-500/20 blur-[160px] hidden dark:block" />
-  </div>
+      {/* AMBIENT GLOW */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute -top-40 -left-40 w-[520px] h-[520px] bg-purple-200/40 blur-[160px] dark:hidden" />
+        <div className="absolute -top-40 -left-40 w-[520px] h-[520px] bg-fuchsia-500/20 blur-[160px] hidden dark:block" />
+      </div>
 
       <div className="max-w-7xl mx-auto px-6 py-16 space-y-28">
-
 
         {services.map((service) => (
           <motion.div
@@ -130,24 +134,23 @@ export default function ScrollServices() {
 
             {/* LEFT — TEXT */}
             <div>
-             <motion.span
-  initial={{ opacity: 0, y: 20 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.6 }}
-  className="block mb-3 text-sm tracking-[0.35em] uppercase font-semibold text-fuchsia-500"
->
-  {service.label}
-</motion.span>
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="block mb-3 text-sm tracking-[0.35em] uppercase font-semibold text-fuchsia-500"
+              >
+                {service.label}
+              </motion.span>
 
-<motion.h2
-  initial={{ opacity: 0, y: 30 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.15, duration: 0.8 }}
-  className="text-[clamp(2.1rem,3.5vw,3rem)] font-extrabold leading-tight"
->
-  {service.title}
-</motion.h2>
-
+              <motion.h2
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15, duration: 0.8 }}
+                className="text-[clamp(2.1rem,3.5vw,3rem)] font-extrabold leading-tight"
+              >
+                {service.title}
+              </motion.h2>
 
               <p className="mt-3 text-lg leading-relaxed text-foreground/70 max-w-2xl">
                 {service.description}
@@ -165,29 +168,34 @@ export default function ScrollServices() {
                 ))}
               </div>
 
-              <button className="
-                mt-6 inline-flex items-center gap-3 px-7 py-3.5
-                text-sm font-semibold text-white rounded-full
-                bg-gradient-to-r from-fuchsia-600 to-purple-700
-                transition-all duration-300
-                hover:scale-105 hover:shadow-[0_0_28px_rgba(217,70,239,0.45)]
-                active:scale-95
-              ">
+              {/* CTA BUTTON → ROUTE */}
+              <Link
+                to={service.route}
+                className="
+                  mt-6 inline-flex items-center gap-3 px-7 py-3.5
+                  text-sm font-semibold text-white rounded-full
+                  bg-gradient-to-r from-fuchsia-600 to-purple-700
+                  transition-all duration-300
+                  hover:scale-105 hover:shadow-[0_0_28px_rgba(217,70,239,0.45)]
+                  active:scale-95
+                "
+              >
                 {service.cta}
-              </button>
+              </Link>
             </div>
 
             {/* RIGHT — STICKY VIDEO */}
             <div className="relative">
-             <div className="
-  sticky top-[120px]
-  aspect-square w-full max-w-[420px] mx-auto
-  overflow-hidden rounded-3xl
-  bg-white/5 backdrop-blur-xl
-  ring-1 ring-white/10
-  shadow-[0_40px_120px_rgba(0,0,0,0.6)]
-">
-
+              <div
+                className="
+                  sticky top-[120px]
+                  aspect-square w-full max-w-[420px] mx-auto
+                  overflow-hidden rounded-3xl
+                  bg-white/5 backdrop-blur-xl
+                  ring-1 ring-white/10
+                  shadow-[0_40px_120px_rgba(0,0,0,0.6)]
+                " 
+              >
                 <ServiceVideo src={service.video} />
               </div>
             </div>

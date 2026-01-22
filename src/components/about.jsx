@@ -4,26 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import { Eye, Target } from "lucide-react";
 import { Mic } from "lucide-react";
 export default function About() {
-  const [activeTab, setActiveTab] = useState("vision");
-const intervalRef = useRef(null);
 
-useEffect(() => {
-  intervalRef.current = setInterval(() => {
-    setActiveTab((prev) => (prev === "vision" ? "mission" : "vision"));
-  }, 4000);
-
-  return () => clearInterval(intervalRef.current);
-}, []);
-
-const handleTabChange = (tab) => {
-  clearInterval(intervalRef.current); // stop auto on manual click
-  setActiveTab(tab);
-
-  // restart auto after interaction
-  intervalRef.current = setInterval(() => {
-    setActiveTab((prev) => (prev === "vision" ? "mission" : "vision"));
-  }, 4000);
-};
 
   // Hooks MUST be inside component
   const { scrollYProgress } = useScroll();
@@ -31,9 +12,14 @@ const handleTabChange = (tab) => {
 const [active, setActive] = useState(null);
   const sectionRef = useRef(null);
   const [mouse, setMouse] = useState({ x: -1000, y: -1000 });
+ const isVision = active === "vision";
 
   const COLS = 30;   // small tiles
   const ROWS = 18;
+    const togglePanel = () => {
+    setActive(prev => (prev === "vision" ? "mission" : "vision"));
+  };
+
   return (
     <main
   className="
@@ -76,60 +62,59 @@ const [active, setActive] = useState(null);
       "
     >
       {/* ===== TILE GRID ===== */}
+      {/* ===== TILE GRID ===== */}
+<div
+  className="absolute inset-0 grid pointer-events-none"
+  style={{
+    gridTemplateColumns: `repeat(${COLS}, 1fr)`,
+    gridTemplateRows: `repeat(${ROWS}, 1fr)`,
+  }}
+>
+  {Array.from({ length: COLS * ROWS }).map((_, i) => {
+    return (
       <div
-        className="absolute inset-0 grid pointer-events-none"
+        key={i}
+        className="border border-black/5 dark:border-white/5"
         style={{
-          gridTemplateColumns: `repeat(${COLS}, 1fr)`,
-          gridTemplateRows: `repeat(${ROWS}, 1fr)`,
+          background: (() => {
+            if (!sectionRef.current) return "transparent";
+
+            const rect = sectionRef.current.getBoundingClientRect();
+            const col = i % COLS;
+            const row = Math.floor(i / COLS);
+
+            const tileW = rect.width / COLS;
+            const tileH = rect.height / ROWS;
+
+            const cx = col * tileW + tileW / 2;
+            const cy = row * tileH + tileH / 2;
+
+            const dx = mouse.x - cx;
+            const dy = mouse.y - cy;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            const radius = 70;
+            const strength = Math.max(0, 1 - dist / radius);
+
+            if (strength <= 0) return "transparent";
+
+            const palette = [
+              "168,85,247",   // purple
+              "236,72,153",   // magenta
+              "0,0,0",        // black
+              "255,255,255",  // white
+            ];
+
+            const color = palette[i % palette.length];
+
+            return `rgba(${color}, ${strength * 0.35})`;
+          })(),
+          transition: "background 120ms ease-out",
         }}
-      >
-        {Array.from({ length: COLS * ROWS }).map((_, i) => {
-          return (
-            <div
-              key={i}
-              className="border border-black/10 dark:border-white/10"
-              style={{
-                background: (() => {
-                  if (!sectionRef.current) return "transparent";
-
-                  const rect = sectionRef.current.getBoundingClientRect();
-                  const col = i % COLS;
-                  const row = Math.floor(i / COLS);
-
-                  const tileW = rect.width / COLS;
-                  const tileH = rect.height / ROWS;
-
-                  const cx = col * tileW + tileW / 2;
-                  const cy = row * tileH + tileH / 2;
-
-                  const dx = mouse.x - cx;
-                  const dy = mouse.y - cy;
-                  const dist = Math.sqrt(dx * dx + dy * dy);
-
-                  /* VERY TIGHT radius */
-                  const radius = 70;
-                  const strength = Math.max(0, 1 - dist / radius);
-
-                  if (strength <= 0) return "transparent";
-
-                  /* Controlled color palette */
-                  const palette = [
-                    "168,85,247",   // purple
-                    "236,72,153",   // magenta
-                    "0,0,0",        // black
-                    "255,255,255",  // white
-                  ];
-
-                  const color = palette[i % palette.length];
-
-                  return `rgba(${color}, ${strength * 0.75})`;
-                })(),
-                transition: "background 120ms ease-out",
-              }}
-            />
-          );
-        })}
-      </div>
+      />
+    );
+  })}
+</div>
 
       {/* ===== CONTENT ===== */}
       <motion.div
@@ -379,33 +364,25 @@ const [active, setActive] = useState(null);
 
 </section>
 
-
-
-{/* <div className="h-8 bg-gradient-to-b from-transparent to-purple-50 dark:to-black" /> */}
-
-{/* ================= VISION & MISSION ================= */}
-{/* ================= VISION / MISSION TOGGLE (ENHANCED) ================= */}
-{/* ================= VISION & MISSION ================= */}
-{/* ================= VISION / MISSION – IMMERSIVE ================= */}
-{/* ================= VISION / MISSION – SEAMLESS IMMERSIVE ================= */}
-
-{/* ================= VISION & MISSION — GLORY SECTION ================= */}
-{/* ================= VISION & MISSION — COMPACT GLORY ================= */}
-{/* ================= VISION → MISSION (SCROLL MORPH) ================= */}
- 
-<section className="relative py-20 overflow-hidden bg-white dark:bg-black">
-
-
-  {/* Soft ambient background */}
+{/* vision & mission */}
+<section
+  className="
+    relative w-full overflow-hidden
+    pt-0 pb-24
+    bg-gradient-to-br
+    from-purple-50 via-white to-fuchsia-50
+    dark:from-[#0b0614] dark:via-black dark:to-[#160b2d]
+  "
+>
+  {/* SECTION GLOW */}
   <div className="absolute inset-0 pointer-events-none">
-    <div className="absolute top-1/3 left-1/4 w-[420px] h-[420px] bg-purple-500/15 blur-[160px]" />
-    <div className="absolute bottom-1/4 right-1/4 w-[380px] h-[380px] bg-fuchsia-500/15 blur-[160px]" />
+    <div className="absolute -top-32 left-1/4 w-[700px] h-[700px] bg-purple-400/30 blur-[320px]" />
+    <div className="absolute -bottom-40 right-1/4 w-[700px] h-[700px] bg-fuchsia-400/30 blur-[320px]" />
   </div>
 
-  <div className="relative max-w-6xl mx-auto px-8">
-
-    {/* Heading */}
-    <h2 className="text-center text-4xl md:text-5xl font-semibold mb-12">
+  {/* HEADING */}
+  <div className="relative text-center pt-20 pb-16">
+    <h2 className="text-5xl font-semibold text-black dark:text-white">
       Our{" "}
       <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-fuchsia-500">
         Vision
@@ -415,126 +392,121 @@ const [active, setActive] = useState(null);
         Mission
       </span>
     </h2>
+  </div>
 
-    {/* GRID */}
+  {/* SLIDING CONTAINER */}
+  <div className="relative max-w-6xl mx-auto">
     <div
-      className="grid grid-cols-1 md:grid-cols-2 gap-12"
-      onMouseLeave={() => setActive(null)}
+      className="
+        relative h-[420px] rounded-[2.6rem] overflow-hidden
+        bg-white dark:bg-[#0f0b1a]
+        shadow-[0_50px_140px_rgba(168,85,247,0.35)]
+        dark:shadow-[0_50px_140px_rgba(0,0,0,0.9)]
+      "
     >
-
-      {/* ================= LEFT : VISION ================= */}
-      <AnimatePresence mode="wait">
+      {/* VISION PANEL */}
+      <motion.div
+        animate={{ x: active === "vision" ? "0%" : "100%" }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+        className="
+          absolute top-0 left-0 w-1/2 h-full
+          bg-white dark:bg-[#0f0b1a]
+          flex items-center justify-center
+        "
+      >
         {active === "vision" ? (
-          <motion.div
-            key="vision-content"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 15 }}
-            transition={{ duration: 0.45 }}
-            className="
-              h-full p-14 rounded-3xl
-              bg-gradient-to-br from-purple-600 to-fuchsia-600
-              text-white flex flex-col justify-center
-              shadow-xl shadow-purple-600/20
-            "
-          >
-            <Eye className="w-12 h-12 mb-8 text-white/90" />
-            <p className="text-2xl md:text-[1.6rem] leading-relaxed font-medium max-w-[92%]">
-              We imagine a future where intelligent systems empower people,
-              clarity guides every decision, and technology becomes a force
-              for meaningful and sustainable progress.
+          <div className="max-w-md text-center px-6">
+            <Eye className="w-12 h-12 mx-auto mb-6 text-purple-600" />
+            <h3 className="text-3xl font-semibold mb-6 text-black dark:text-white">
+              Our Vision
+            </h3>
+            <p className="text-lg leading-[1.9] text-justify text-black/80 dark:text-white/75">
+              Our vision is to become the trusted partner for organizations
+              seeking actionable insights from their data, driving strategic
+              growth and competitive advantage. Through our comprehensive suite
+              of consulting services and the development of our SaaS platform,
+              we’re committed to revolutionizing the way businesses leverage
+              data for success.
             </p>
-          </motion.div>
+          </div>
         ) : (
-          <motion.div
-            key="vision-title"
-            onMouseEnter={() => setActive("vision")}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="
-              h-full p-14 rounded-3xl
-              bg-gradient-to-br from-purple-600 to-fuchsia-600
-              text-white flex flex-col items-center justify-center
-              cursor-pointer
-              hover:scale-[1.02]
-              transition-transform
-            "
-          >
-            <Eye className="w-12 h-12 mb-6" />
-            <h3 className="text-3xl font-semibold">Our Vision</h3>
-          </motion.div>
+          <div className="text-center">
+            <Eye className="w-12 h-12 mx-auto mb-6 text-purple-600" />
+            <h3 className="text-3xl font-semibold mb-6 text-black dark:text-white">
+              Our Vision
+            </h3>
+            <button
+              onClick={togglePanel}
+              className="
+                px-7 py-3 rounded-xl
+                bg-gradient-to-r from-purple-600 to-fuchsia-600
+                text-white font-semibold
+                shadow-lg
+                hover:scale-[1.03] transition
+              "
+            >
+              Read it out
+            </button>
+          </div>
         )}
-      </AnimatePresence>
+      </motion.div>
 
-      {/* ================= RIGHT : MISSION ================= */}
-      <AnimatePresence mode="wait">
-        {active === "mission" ? (
-          <motion.div
-            key="mission-content"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 15 }}
-            transition={{ duration: 0.45 }}
-            className="
-              h-full p-14 rounded-3xl
-              bg-neutral-900 text-white
-              border border-white/10
-              flex flex-col justify-center
-              shadow-xl shadow-black/30
-            "
-          >
-            <Target className="w-12 h-12 mb-8 text-purple-400" />
-            <p className="text-2xl md:text-[1.6rem] leading-relaxed font-medium text-white/85 max-w-[92%]">
-              We build intelligent foundations by aligning strategy, data,
-              and engineering—helping organizations move faster, think
-              clearer, and grow with confidence.
+      {/* MISSION PANEL */}
+      <motion.div
+        animate={{ x: active === "vision" ? "100%" : "0%" }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+        className="
+          absolute top-0 left-0 w-1/2 h-full
+          bg-gradient-to-br from-purple-600 to-fuchsia-600
+          dark:from-purple-700 dark:to-fuchsia-700
+          text-white flex items-center justify-center
+        "
+      >
+        {active !== "vision" ? (
+          <div className="max-w-md text-center px-6">
+            <Target className="w-12 h-12 mx-auto mb-6 text-white" />
+            <h3 className="text-3xl font-semibold mb-6">
+              Our Mission
+            </h3>
+            <p className="text-lg leading-[1.9] text-justify text-white/90">
+              At the heart of our mission is a commitment to excellence in
+              data analysis, reporting, and forecasting, enabling organizations
+              to unlock their full potential. We aim to foster long-term
+              partnerships built on trust, reliability, and a shared dedication
+              to driving impactful outcomes through informed decision-making.
             </p>
-          </motion.div>
+          </div>
         ) : (
-          <motion.div
-            key="mission-title"
-            onMouseEnter={() => setActive("mission")}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="
-              h-full p-14 rounded-3xl
-              bg-neutral-900 text-white
-              border border-white/10
-              flex flex-col items-center justify-center
-              cursor-pointer
-              hover:scale-[1.02]
-              transition-transform
-            "
-          >
-            <Target className="w-12 h-12 mb-6 text-purple-400" />
-            <h3 className="text-3xl font-semibold">Our Mission</h3>
-          </motion.div>
+          <div className="text-center">
+            <Target className="w-12 h-12 mx-auto mb-6 text-white" />
+            <h3 className="text-3xl font-semibold mb-6">
+              Our Mission
+            </h3>
+            <button
+              onClick={togglePanel}
+              className="
+                px-7 py-3 rounded-xl
+                bg-white dark:bg-black
+                text-purple-700 dark:text-purple-300
+                font-semibold
+                shadow-lg
+                hover:scale-[1.03] transition
+              "
+            >
+              Read it out
+            </button>
+          </div>
         )}
-      </AnimatePresence>
-
+      </motion.div>
     </div>
   </div>
 </section>
-
-
-{/* <div className="
-  h-24
-  bg-gradient-to-b
-  from-purple-50
-  via-white
-  to-transparent
-  dark:from-black dark:via-black
-" /> */}
-
 
 {/* ================= FROM THE DESK ================= */}
 {/* ================= VOICE FROM THE DESK (UNIQUE) ================= */}
 {/* ================= FROM THE DESK — CEO VOICE ================= */}
 {/* ================= FROM THE DESK — VOICE FLOW ================= */}
 <section className="relative py-24 overflow-hidden bg-white dark:bg-black">
-
 
   {/* Ambient gradient field */}
   <div className="absolute inset-0 pointer-events-none">
@@ -568,38 +540,21 @@ const [active, setActive] = useState(null);
       </h2>
     </motion.div>
 
-    {/* ===== VOICE LINE (LONGER, CALMER) ===== */}
+    {/* Voice line */}
     <motion.div
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 1 }}
-     className="flex items-center gap-6 mb-16"
-
+      className="flex items-center gap-6 mb-20"
     >
-
-      {/* Mic */}
-      <motion.div
-        animate={{ opacity: [0.4, 1, 0.4] }}
-        transition={{
-          duration: 4.5,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        className="text-purple-600"
-      >
-        <Mic size={26} />
-      </motion.div>
-
-      {/* Extended waveform */}
+      <Mic size={26} className="text-purple-600" />
       <div className="flex items-end gap-[7px] h-8">
         {Array.from({ length: 28 }).map((_, i) => (
           <motion.span
             key={i}
             className="w-[3px] rounded-full bg-gradient-to-t from-purple-600 via-fuchsia-500 to-purple-400"
-            animate={{
-              height: ["6px", "32px", "12px"],
-            }}
+            animate={{ height: ["6px", "32px", "12px"] }}
             transition={{
               duration: 4 + Math.random() * 2,
               repeat: Infinity,
@@ -609,55 +564,178 @@ const [active, setActive] = useState(null);
           />
         ))}
       </div>
-
     </motion.div>
 
-    {/* ===== TEXT FLOW (NO BOX) ===== */}
-    <div className="relative max-w-4xl">
+    {/* TEXT + VIDEO GRID */}
+    <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-16 items-stretch">
 
-      {/* Vertical gradient guide */}
-      <div className="absolute left-0 top-0 bottom-0 w-[3px]
-        bg-gradient-to-b from-purple-600 via-fuchsia-500 to-transparent" />
+      {/* LEFT — TEXT */}
+      <div className="relative">
 
-      <div className="pl-10 space-y-10">
+        <div className="absolute left-0 top-0 bottom-0 w-[3px]
+          bg-gradient-to-b from-purple-600 via-fuchsia-500 to-transparent" />
 
-        <p className="text-xl md:text-2xl leading-[1.8] text-black/85 dark:text-white/85">
-          Arithwise was founded with a clear intent — to simplify how
-          technology supports decision-making, scale, and long-term growth.
-        </p>
+        <div className="pl-10">
 
-        <p className="text-xl md:text-2xl leading-[1.8] text-black/80 dark:text-white/80">
-          As organizations evolve, systems often become complex,
-          fragmented, and difficult to manage. What begins as innovation
-          gradually turns into overhead.
-        </p>
-
-        <p className="text-xl md:text-2xl leading-[1.8] text-black/80 dark:text-white/80">
-          We focus on building intelligent foundations — systems that
-          remain clear, resilient, and aligned with real business goals,
-          even as complexity increases.
-        </p>
-
-        {/* Signature */}
-        <div className="pt-10">
-          <p className="text-lg font-medium tracking-tight">
-            — Vishvesh Algeri
+          <p className="text-lg md:text-xl leading-[1.7] text-black/85 dark:text-white/85 text-justify mb-4">
+            Arithwise was founded with a clear purpose — to engineer technology
+            solutions that support confident decision-making, sustainable scale,
+            and long-term business growth.
           </p>
-          <p className="text-sm tracking-wide text-black/50 dark:text-white/50 mt-1">
-            Founder & CEO
+
+          <p className="text-lg md:text-xl leading-[1.7] text-black/80 dark:text-white/80 text-justify mb-4">
+            We believe innovation should be intentional. At Arithwise, solutions
+            are not simply delivered; they are carefully designed, tested, and
+            refined to meet real-world business challenges with precision and
+            reliability.
           </p>
+
+          <p className="text-lg md:text-xl leading-[1.7] text-black/80 dark:text-white/80 text-justify mb-4">
+            As organizations evolve, systems often become fragmented and
+            difficult to manage. What begins as progress can gradually turn into
+            operational overhead. Our role is to simplify that complexity through
+            clear, resilient, and aligned technology foundations.
+          </p>
+
+          <p className="text-lg md:text-xl leading-[1.7] text-black/80 dark:text-white/80 text-justify mb-4">
+            Our team brings together strong technical expertise and a commitment
+            to continuous growth. We invest in people because we understand that
+            their success directly enables better outcomes for our clients.
+          </p>
+
+          <p className="text-lg md:text-xl leading-[1.7] text-black/80 dark:text-white/80 text-justify mb-4">
+            At the core of Arithwise is a belief in fairness — fair pricing,
+            transparent engagement, and equal access to high-quality technology
+            consulting, regardless of scale or budget.
+          </p>
+
+          <p className="text-lg md:text-xl leading-[1.7] text-black/80 dark:text-white/80 text-justify">
+            More than a services firm, Arithwise is a community focused on
+            building intelligent foundations, fostering innovation, and
+            delivering measurable value.
+          </p>
+
+          <div className="pt-10">
+            <p className="text-lg font-medium">— Vishvesh Algeri</p>
+            <p className="text-sm text-black/50 dark:text-white/50">
+              Founder & CEO
+            </p>
+          </div>
+
         </div>
-
       </div>
+
+      {/* RIGHT — FULL HEIGHT VIDEO */}
+      <div className="relative hidden lg:block h-full">
+
+        <div className="absolute inset-0 bg-gradient-to-br
+          from-purple-500/25 via-transparent to-fuchsia-500/25
+          blur-[140px]" />
+
+        <video
+          src="/videos/founders.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="
+    relative z-10
+    h-full
+   w-[112%] -mr-[12%]
+
+    object-cover
+    rounded-[2.2rem]
+    mask-image-[linear-gradient(to_left,black,transparent)]
+  "
+        />
+      </div>
+
+    </div>
+  </div>
+<section className="relative pt-0 pb-20 overflow-hidden bg-white dark:bg-black">
+
+  {/* Ambient gradient */}
+  <div className="absolute inset-0 pointer-events-none">
+    <div
+      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+      w-[900px] h-[900px]
+      bg-[radial-gradient(circle,rgba(168,85,247,0.22),transparent_60%)]"
+    />
+  </div>
+
+  <div className="relative max-w-6xl mx-auto px-8 text-center">
+
+    {/* Connector line (tightened) */}
+    <div className="mx-auto mb-6 w-px h-14
+      bg-gradient-to-b from-transparent via-purple-600 to-transparent" />
+
+    {/* Heading */}
+    <motion.h2
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="text-4xl md:text-5xl font-semibold tracking-tight"
+    >
+      Let’s{" "}
+      <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-fuchsia-500">
+        Connect
+      </span>
+    </motion.h2>
+
+    {/* Subtext */}
+    <motion.p
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.15, duration: 0.6 }}
+      className="mt-5 text-lg md:text-xl text-black/70 dark:text-white/70 max-w-3xl mx-auto"
+    >
+      Whether you’re exploring an idea, solving a complex challenge, or looking
+      to build intelligent systems that scale — we’re ready to listen.
+    </motion.p>
+
+    {/* Divider line */}
+    <div className="relative mt-10 flex justify-center">
+      <div className="w-[220px] h-px
+        bg-gradient-to-r from-transparent via-purple-600 to-transparent" />
     </div>
 
+    {/* CTA */}
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.25, duration: 0.6 }}
+      className="mt-10"
+    >
+      <a
+        href="/contact"
+        className="
+          inline-flex items-center gap-3
+          px-10 py-4
+          rounded-full
+          bg-gradient-to-r from-purple-600 to-fuchsia-600
+          text-white font-medium text-lg
+          shadow-[0_18px_50px_rgba(168,85,247,0.45)]
+          hover:scale-[1.04]
+          transition-transform
+        "
+      >
+        Start the Conversation
+        <span className="text-xl">→</span>
+      </a>
+    </motion.div>
+
   </div>
+
+</section>
+
 
   {/* Bottom dissolve */}
   <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none
     bg-gradient-to-b from-transparent via-white to-white
-    dark:via-black dark:to-black
-  " />
+    dark:via-black dark:to-black" />
 
 </section>
 

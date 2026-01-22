@@ -43,6 +43,7 @@ export default function App() {
         {/* ================= PAGE CONTENT ================= */}
         <main className="relative z-10">
           <Routes>
+      
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<DarkAboutUs />} />
             <Route path="/services" element={<Services />} />
